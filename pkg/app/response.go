@@ -12,4 +12,6 @@ func Response(c *gin.Context, code int, data interface{}) {
 		"message": e.GetMsg(code),
 		"data": data,
 	})
+
+	c.Abort()
 }
