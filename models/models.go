@@ -32,7 +32,7 @@ func Setup() {
 	}
 
 	if config.ServerSetting.RunMode == "debug" {
-		Eloquent = Eloquent.Debug()
+		Eloquent.LogMode(true)
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
