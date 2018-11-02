@@ -6,6 +6,20 @@
     },
     "paths": {
         "/api/v1/tags": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取多个文章标签",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{\"lists\": [], \"total\": 0},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "produces": [
                     "application/json"
@@ -34,7 +48,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":200,\"data\":null,\"msg\":\"ok\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -73,7 +87,24 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "description": "{\"code\":200,\"data\":null,\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除文章标签",
+                "parameters": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":null,\"msg\":\"ok\"}",
                         "schema": {
                             "type": "string"
                         }

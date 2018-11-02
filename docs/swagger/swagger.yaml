@@ -3,6 +3,15 @@ info:
   license: {}
 paths:
   /api/v1/tags:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{"lists": [], "total": 0},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 获取多个文章标签
     post:
       parameters:
       - description: Name
@@ -22,11 +31,22 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":200,"data":null,"msg":"ok"}'
           schema:
             type: string
       summary: 新增文章标签
   /api/v1/tags/{id}:
+    delete:
+      parameters:
+      - {}
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":null,"msg":"ok"}'
+          schema:
+            type: string
+      summary: 删除文章标签
     put:
       parameters:
       - {}
@@ -48,7 +68,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
+          description: '{"code":200,"data":null,"msg":"ok"}'
           schema:
             type: string
       summary: 修改文章标签
