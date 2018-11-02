@@ -104,21 +104,21 @@ func AddArticle(c *gin.Context) {
 
 	code := e.INVALID_PARAMS
 	if ! valid.HasErrors() {
-		if models.ExistTagByID(tagId) {
-			data := make(map[string]interface{})
-			data["tag_id"] = tagId
-			data["title"] = title
-			data["desc"] = desc
-			data["content"] = content
-			data["coverImageUrl"] = coverImageUrl
-			data["created_by"] = createdBy
-			data["state"] = state
-
-			models.AddArticle(data)
-			code = e.SUCCESS
-		} else {
-			code = e.ERROR_NOT_EXIST_TAG
-		}
+		//if models.ExistTagByID(tagId) {
+		//	data := make(map[string]interface{})
+		//	data["tag_id"] = tagId
+		//	data["title"] = title
+		//	data["desc"] = desc
+		//	data["content"] = content
+		//	data["coverImageUrl"] = coverImageUrl
+		//	data["created_by"] = createdBy
+		//	data["state"] = state
+		//
+		//	models.AddArticle(data)
+		//	code = e.SUCCESS
+		//} else {
+		//	code = e.ERROR_NOT_EXIST_TAG
+		//}
 	} else {
 		for _, err := range valid.Errors {
 			logging.Info(err.Key, err.Message)
@@ -137,7 +137,7 @@ func EditArticle(c *gin.Context) {
 	valid := validation.Validation{}
 
 	id := com.StrTo(c.Param("id")).MustInt()
-	tagId := com.StrTo(c.Query("tag_id")).MustInt()
+	//tagId := com.StrTo(c.Query("tag_id")).MustInt()
 	title := c.Query("title")
 	desc := c.Query("desc")
 	content := c.Query("content")
@@ -159,28 +159,28 @@ func EditArticle(c *gin.Context) {
 	code := e.INVALID_PARAMS
 	if ! valid.HasErrors() {
 		if models.ExistArticleByID(id) {
-			if models.ExistTagByID(tagId) {
-				data := make(map[string]interface{})
-				if tagId > 0 {
-					data["tag_id"] = tagId
-				}
-				if title != "" {
-					data["title"] = title
-				}
-				if desc != "" {
-					data["desc"] = desc
-				}
-				if content != "" {
-					data["content"] = content
-				}
-
-				data["modified_by"] = modifiedBy
-
-				models.EditArticle(id, data)
-				code = e.SUCCESS
-			} else {
-				code = e.ERROR_NOT_EXIST_TAG
-			}
+			//if models.ExistTagByID(tagId) {
+			//	data := make(map[string]interface{})
+			//	if tagId > 0 {
+			//		data["tag_id"] = tagId
+			//	}
+			//	if title != "" {
+			//		data["title"] = title
+			//	}
+			//	if desc != "" {
+			//		data["desc"] = desc
+			//	}
+			//	if content != "" {
+			//		data["content"] = content
+			//	}
+			//
+			//	data["modified_by"] = modifiedBy
+			//
+			//	models.EditArticle(id, data)
+			//	code = e.SUCCESS
+			//} else {
+			//	code = e.ERROR_NOT_EXIST_TAG
+			//}
 		} else {
 			code = e.ERROR_NOT_EXIST_ARTICLE
 		}

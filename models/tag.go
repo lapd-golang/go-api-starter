@@ -9,21 +9,21 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
-func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
-	db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
+func (t *Tag) Get(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
+	Eloquent.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
 
 	return
 }
 
-func GetTagTotal(maps interface{}) (count int) {
-	db.Model(&Tag{}).Where(maps).Count(&count)
+func (t *Tag) GetTotal(maps interface{}) (count int) {
+	Eloquent.Model(&Tag{}).Where(maps).Count(&count)
 
 	return
 }
 
-func ExistTagByName(name string) bool {
+func (t *Tag) ExistTagByName(name string) bool {
 	var tag Tag
-	db.Select("id").Where("name = ?", name).First(&tag)
+	Eloquent.Select("id").Where("name = ?", name).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -31,8 +31,8 @@ func ExistTagByName(name string) bool {
 	return false
 }
 
-func AddTag(name string, state int, createdBy string) bool{
-	db.Create(&Tag {
+func (t *Tag) AddTag(name string, state int, createdBy string) bool{
+	Eloquent.Create(&Tag {
 		Name : name,
 		State : state,
 		CreatedBy : createdBy,
@@ -41,9 +41,9 @@ func AddTag(name string, state int, createdBy string) bool{
 	return true
 }
 
-func ExistTagByID(id int) bool {
+func (t *Tag) ExistTagByID(id int) bool {
 	var tag Tag
-	db.Select("id").Where("id = ?", id).First(&tag)
+	Eloquent.Select("id").Where("id = ?", id).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -51,20 +51,20 @@ func ExistTagByID(id int) bool {
 	return false
 }
 
-func DeleteTag(id int) bool {
-	db.Where("id = ?", id).Delete(&Tag{})
+func (t *Tag) DeleteTag(id int) bool {
+	Eloquent.Where("id = ?", id).Delete(&Tag{})
 
 	return true
 }
 
-func EditTag(id int, data interface {}) bool {
-	db.Model(&Tag{}).Where("id = ?", id).Updates(data)
+func (t *Tag) EditTag(id int, data interface {}) bool {
+	Eloquent.Model(&Tag{}).Where("id = ?", id).Updates(data)
 
 	return true
 }
 
-func CleanAllTag() bool {
-	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
+func (t *Tag) CleanAllTag() bool {
+	Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
 
 	return true
 }

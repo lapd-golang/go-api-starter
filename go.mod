@@ -17,7 +17,7 @@ require (
 	github.com/go-openapi/jsonreference v0.0.0-20180825180305-1c6a3fa339f2 // indirect
 	github.com/go-openapi/spec v0.0.0-20180825180323-f1468acb3b29 // indirect
 	github.com/go-openapi/swag v0.0.0-20180908172849-dd0dad036e67 // indirect
-	github.com/go-sql-driver/mysql v1.4.0 // indirect
+	github.com/go-sql-driver/mysql v1.4.0
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20180825215210-0210a2f0f73c // indirect

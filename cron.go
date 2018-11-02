@@ -12,9 +12,10 @@ func main() {
 
 	c := cron.New()
 
+	var tag models.Tag
 	c.AddFunc("* * * * * *", func() {
-		log.Println("Run models.CleanAllTag...")
-		models.CleanAllTag()
+		log.Println("Run tag.CleanAllTag...")
+		tag.CleanAllTag()
 	})
 	c.AddFunc("* * * * * *", func() {
 		log.Println("Run models.CleanAllArticle...")

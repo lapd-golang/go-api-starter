@@ -2,6 +2,7 @@ package v1
 
 import (
 	"admin-server/models"
+	"admin-server/pkg/app"
 	"admin-server/pkg/config"
 	"admin-server/pkg/e"
 	"admin-server/pkg/logging"
@@ -9,10 +10,12 @@ import (
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
-//获取多个文章标签
+// @Summary 获取多个文章标签
+// @Produce json
+// @Success 200 {string} json "{"code":200,"data":{"lists": [], "total": 0},"msg":"ok"}"
+// @Router /api/v1/tags [get]
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 
@@ -29,16 +32,11 @@ func GetTags(c *gin.Context) {
 		maps["state"] = state
 	}
 
-	code := e.SUCCESS
+	var user models.Tag
+	data["lists"] = user.Get(util.GetPage(c), config.AppSetting.PageSize, maps)
+	data["total"] = user.GetTotal(maps)
 
-	data["lists"] = models.GetTags(util.GetPage(c), config.AppSetting.PageSize, maps)
-	data["total"] = models.GetTagTotal(maps)
-
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+	app.Response(c, e.SUCCESS, "ok", data)
 }
 
 // @Summary 新增文章标签
@@ -46,12 +44,12 @@ func GetTags(c *gin.Context) {
 // @Param name query string true "Name"
 // @Param state query int false "State"
 // @Param created_by query int false "CreatedBy"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
-	name := c.Query("name")
-	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
-	createdBy := c.Query("created_by")
+	name := c.PostForm("name")
+	state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
+	createdBy := c.PostForm("created_by")
 
 	valid := validation.Validation{}
 	valid.Required(name, "name").Message("名称不能为空")
@@ -60,25 +58,24 @@ func AddTag(c *gin.Context) {
 	valid.MaxSize(createdBy, 100, "created_by").Message("创建人最长为100字符")
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 
-	code := e.INVALID_PARAMS
-	if ! valid.HasErrors() {
-		if ! models.ExistTagByName(name) {
-			code = e.SUCCESS
-			models.AddTag(name, state, createdBy)
-		} else {
-			code = e.ERROR_EXIST_TAG
-		}
-	} else {
-		for _, err := range valid.Errors {
-			logging.Info(err.Key, err.Message)
-		}
+	if valid.HasErrors() {
+		logging.Info(valid.Errors)
+
+		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	var user models.Tag
+
+	if ! user.ExistTagByName(name) {
+		user.AddTag(name, state, createdBy)//TODO:如何获取id？
+
+		app.Response(c, e.SUCCESS, "ok", nil)
+		return
+	} else {
+		app.Response(c, e.ERROR_EXIST_TAG, "已存在该标签名称", nil)
+		return
+	}
 }
 
 // @Summary 修改文章标签
@@ -87,12 +84,12 @@ func AddTag(c *gin.Context) {
 // @Param name query string true "ID"
 // @Param state query int false "State"
 // @Param modified_by query string true "ModifiedBy"
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
-	name := c.Query("name")
-	modifiedBy := c.Query("modified_by")
+	name := c.PostForm("name")
+	modifiedBy := c.PostForm("modified_by")
 
 	valid := validation.Validation{}
 
@@ -107,60 +104,59 @@ func EditTag(c *gin.Context) {
 	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
 	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
 
-	code := e.INVALID_PARAMS
-	if ! valid.HasErrors() {
-		code = e.SUCCESS
-		if models.ExistTagByID(id) {
-			data := make(map[string]interface{})
-			data["modified_by"] = modifiedBy
-			if name != "" {
-				data["name"] = name
-			}
-			if state != -1 {
-				data["state"] = state
-			}
+	if valid.HasErrors() {
+		logging.Info(valid.Errors)
 
-			models.EditTag(id, data)
-		} else {
-			code = e.ERROR_NOT_EXIST_TAG
-		}
-	} else {
-		for _, err := range valid.Errors {
-			logging.Info(err.Key, err.Message)
-		}
+		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	tag := models.Tag{}
+
+	if tag.ExistTagByID(id) {
+		tag.ModifiedBy = modifiedBy
+		if name != "" {
+			tag.Name = name
+		}
+		if state != -1 {
+			tag.State = state
+		}
+
+		tag.EditTag(id, tag)
+		app.Response(c, e.SUCCESS, "ok", nil)
+		return
+	} else {
+		app.Response(c, e.ERROR_NOT_EXIST_TAG, "该标签不存在", nil)
+		return
+	}
 }
 
-//删除文章标签
+// @Summary 删除文章标签
+// @Produce json
+// @Param id param int true "ID"
+// @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
+// @Router /api/v1/tags/{id} [delete]
 func DeleteTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
-	valid.Min(id, 1, "id").Message("ID必须大于0")
+	valid.Min(id, 1, "id").Message("请求参数错误")
 
-	code := e.INVALID_PARAMS
-	if ! valid.HasErrors() {
-		code = e.SUCCESS
-		if models.ExistTagByID(id) {
-			models.DeleteTag(id)
-		} else {
-			code = e.ERROR_NOT_EXIST_TAG
-		}
-	} else {
-		for _, err := range valid.Errors {
-			logging.Info(err.Key, err.Message)
-		}
+	if valid.HasErrors() {
+		logging.Info(valid.Errors)
+
+		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	var tag models.Tag
+	if tag.ExistTagByID(id) {
+		tag.DeleteTag(id)
+
+		app.Response(c, e.SUCCESS, "ok", nil)
+		return
+	} else {
+		app.Response(c, e.ERROR_NOT_EXIST_TAG, "该标签不存在", nil)
+		return
+	}
 }

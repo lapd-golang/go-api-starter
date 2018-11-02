@@ -8,7 +8,7 @@ type User struct {
 }
 
 func (u *User) GetByUsernameAndPassword(username string, password string) (user User) {
-	db.Where(User{Username: username, Password: password}).First(&user)
+	Eloquent.Where(User{Username: username, Password: password}).First(&user)
 
 	return
 }
