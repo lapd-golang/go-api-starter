@@ -18,7 +18,7 @@ func JWT() gin.HandlerFunc {
 		}
 		parts := strings.SplitN(token, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			app.Response(c, e.INVALID_PARAMS, "缺少Token参数", nil)
+			app.Response(c, e.INVALID_PARAMS, "Token格式错误", nil)
 			return
 		}
 		token = parts[1]
