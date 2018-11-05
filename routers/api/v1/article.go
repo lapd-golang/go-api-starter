@@ -14,8 +14,11 @@ import (
 )
 
 // @Summary 获取单个文章
+// @Tags articles
 // @Produce json
-// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Param Authorization header string true "Bearer Token"
+// @Param id path string true "ID"
+// @Success 200 {string} json "{"code":200,"data":{},"message":"ok"}"
 // @Router /api/v1/articles/{id} [get]
 func GetArticle(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
@@ -41,8 +44,12 @@ func GetArticle(c *gin.Context) {
 }
 
 // @Summary 获取多个文章
+// @Tags articles
 // @Produce json
-// @Success 200 {string} json "{"code":200,"data":{"lists": [], "total": 0},"msg":"ok"}"
+// @Param Authorization header string true "Bearer Token"
+// @Param state formData int false "State"
+// @Param tag_id formData int false "tag_id"
+// @Success 200 {string} json "{"code":200,"data":{"lists": [], "total": 0},"message":"ok"}"
 // @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
 	data := make(map[string]interface{})
@@ -62,7 +69,7 @@ func GetArticles(c *gin.Context) {
 		tagId = com.StrTo(arg).MustInt()
 		maps["tag_id"] = tagId
 
-		valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
+		valid.Min(tagId, 1, "tag_id").Message("标签ID错误")
 	}
 
 	if valid.HasErrors() {
@@ -81,11 +88,17 @@ func GetArticles(c *gin.Context) {
 }
 
 // @Summary 新增文章
-// @Produce  json
-// @Param name query string true "Name"
-// @Param state query int false "State"
-// @Param created_by query int false "CreatedBy"
-// @Success 200 {string} json "{"code":200,"data":ID,"msg":"ok"}"
+// @Tags articles
+// @Produce json
+// @Param Authorization header string true "Bearer Token"
+// @Param title formData string true "Title"
+// @Param desc formData string true "Desc"
+// @Param content formData string true "Content"
+// @Param created_by formData string true "Created_by"
+// @Param cover_image_url formData file true "cover_image_url"
+// @Param created_by formData string true "CreatedBy"
+// @Param state formData int false "State"
+// @Success 200 {string} json "{"code":200,"data":ID,"message":"ok"}"
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
 	tagId := com.StrTo(c.PostForm("tag_id")).MustInt()
@@ -145,12 +158,17 @@ func AddArticle(c *gin.Context) {
 }
 
 // @Summary 修改文章
-// @Produce  json
-// @Param id param int true "ID"
-// @Param name query string true "ID"
-// @Param state query int false "State"
-// @Param modified_by query string true "ModifiedBy"
-// @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
+// @Tags articles
+// @Produce json
+// @Param Authorization header string true "Bearer Token"
+// @Param id path int true "ID"
+// @Param tag_id formData int true "tag_id"
+// @Param title formData string false "title"
+// @Param desc formData string false "desc"
+// @Param content formData string false "content"
+// @Param modified_by formData string false "ModifiedBy"
+// @Param state formData int false "State"
+// @Success 200 {string} json "{"code":200,"data":null,"message":"ok"}"
 // @Router /api/v1/articles/{id} [put]
 func EditArticle(c *gin.Context) {
 	valid := validation.Validation{}
@@ -215,9 +233,11 @@ func EditArticle(c *gin.Context) {
 }
 
 // @Summary 删除文章
+// @Tags articles
 // @Produce json
-// @Param id param int true "ID"
-// @Success 200 {string} json "{"code":200,"data":null,"msg":"ok"}"
+// @Param Authorization header string true "Bearer Token"
+// @Param id path int true "ID"
+// @Success 200 {string} json "{"code":200,"data":null,"message":"ok"}"
 // @Router /api/v1/articles/{id} [delete]
 func DeleteArticle(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
