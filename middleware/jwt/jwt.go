@@ -13,12 +13,12 @@ func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
 		if token == "" {
-			app.Response(c, e.INVALID_PARAMS, "请求参数错误", nil)
+			app.Response(c, e.INVALID_PARAMS, "缺少Token参数", nil)
 			return
 		}
 		parts := strings.SplitN(token, " ", 2)
 		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			app.Response(c, e.INVALID_PARAMS, "请求参数错误", nil)
+			app.Response(c, e.INVALID_PARAMS, "缺少Token参数", nil)
 			return
 		}
 		token = parts[1]
