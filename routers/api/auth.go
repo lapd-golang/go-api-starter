@@ -41,7 +41,5 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	app.Response(c, e.SUCCESS, "ok", map[string]string{
-		"token": token,
-	})
+	app.Response(c, e.SUCCESS, "ok", token)
 }

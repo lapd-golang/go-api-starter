@@ -8,29 +8,39 @@ import (
 
 var jwtSecret = []byte(config.AppSetting.JwtSecret)
 
+type Token struct {
+	Token     string
+	ExpiresAt int64
+}
+
 type Claims struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username, password string) (string, error) {
+func GenerateToken(username, password string) (Token, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
 		username,
 		password,
-		jwt.StandardClaims {
-			ExpiresAt : expireTime.Unix(),
-			Issuer : "gin-blog",
+		jwt.StandardClaims{
+			ExpiresAt: expireTime.Unix(),
+			Issuer:    "gin-blog",
 		},
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString(jwtSecret)
 
-	return token, err
+	tokenData := Token{
+		Token:     token,
+		ExpiresAt: expireTime.Unix(),
+	}
+
+	return tokenData, err
 }
 
 func ParseToken(token string) (*Claims, error) {
