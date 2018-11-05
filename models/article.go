@@ -15,7 +15,7 @@ type Article struct {
 	State int `json:"state"`
 }
 
-func ExistArticleByID(id int) bool {
+func (a Article) ExistByID(id int) bool {
 	var article Article
 	Eloquent.Select("id").Where("id = ?", id).First(&article)
 
@@ -26,32 +26,32 @@ func ExistArticleByID(id int) bool {
 	return false
 }
 
-func GetArticleTotal(maps interface {}) (count int){
+func (a Article) GetTotal(maps interface {}) (count int){
 	Eloquent.Model(&Article{}).Where(maps).Count(&count)
 
 	return
 }
 
-func GetArticles(pageNum int, pageSize int, maps interface {}) (articles []Article) {
+func (a Article) Get(pageNum int, pageSize int, maps interface {}) (articles []Article) {
 	Eloquent.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
 
 	return
 }
 
-func GetArticle(id int) (article Article) {
+func (a Article) GetById(id int) (article Article) {
 	Eloquent.Where("id = ?", id).First(&article)
 	Eloquent.Model(&article).Related(&article.Tag)
 
 	return
 }
 
-func EditArticle(id int, data interface {}) bool {
+func (a Article) Edit(id int, data interface {}) bool {
 	Eloquent.Model(&Article{}).Where("id = ?", id).Updates(data)
 
 	return true
 }
 
-func (a Article) AddArticle(data map[string]interface {}) int {
+func (a Article) Add(data map[string]interface {}) int {
 	article := Article {
 		TagID : data["tag_id"].(int),
 		Title : data["title"].(string),
@@ -67,13 +67,13 @@ func (a Article) AddArticle(data map[string]interface {}) int {
 	return article.ID
 }
 
-func DeleteArticle(id int) bool {
+func (a Article) Delete(id int) bool {
 	Eloquent.Where("id = ?", id).Delete(Article{})
 
 	return true
 }
 
-func CleanAllArticle() bool {
+func (a Article) CleanAll() bool {
 	Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
 
 	return true

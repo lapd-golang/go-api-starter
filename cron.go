@@ -14,12 +14,13 @@ func main() {
 
 	var tag models.Tag
 	c.AddFunc("* * * * * *", func() {
-		log.Println("Run tag.CleanAllTag...")
-		tag.CleanAllTag()
+		log.Println("Run tag.CleanAll...")
+		tag.CleanAll()
 	})
+	var article models.Article
 	c.AddFunc("* * * * * *", func() {
-		log.Println("Run models.CleanAllArticle...")
-		models.CleanAllArticle()
+		log.Println("Run article.CleanAll...")
+		article.CleanAll()
 	})
 
 	c.Start()
