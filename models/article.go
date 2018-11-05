@@ -51,8 +51,8 @@ func EditArticle(id int, data interface {}) bool {
 	return true
 }
 
-func AddArticle(data map[string]interface {}) bool {
-	Eloquent.Create(&Article {
+func (a Article) AddArticle(data map[string]interface {}) int {
+	article := Article {
 		TagID : data["tag_id"].(int),
 		Title : data["title"].(string),
 		Desc : data["desc"].(string),
@@ -60,9 +60,11 @@ func AddArticle(data map[string]interface {}) bool {
 		CreatedBy : data["created_by"].(string),
 		State : data["state"].(int),
 		CoverImageUrl: data["cover_image_url"].(string),
-	})
+	}
 
-	return true
+	Eloquent.Create(&article)
+
+	return article.ID
 }
 
 func DeleteArticle(id int) bool {

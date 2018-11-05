@@ -20,8 +20,6 @@ func main() {
 	logging.Setup()
 	gredis.Setup()
 
-	defer models.Eloquent.Close()
-
 	routersInit := routers.InitRouter()
 	readTimeout := config.ServerSetting.ReadTimeout
 	writeTimeout := config.ServerSetting.WriteTimeout

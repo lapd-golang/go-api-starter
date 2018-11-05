@@ -5,38 +5,50 @@ import (
 	"admin-server/pkg/file"
 	"admin-server/pkg/logging"
 	"admin-server/pkg/util"
+	"bytes"
+	"errors"
 	"fmt"
+	"github.com/Unknwon/com"
+	"io"
+	"io/ioutil"
 	"log"
 	"mime/multipart"
+	"net/http"
 	"os"
 	"path"
-	"strings"
+	"time"
 )
 
-func GetImageFullUrl(name string) string {
-	return config.AppSetting.ImagePrefixUrl + "/" + GetImagePath() + name
+func GetImageFullUrl(path string) string {
+	return config.AppSetting.ImagePrefixUrl + "/" + path
 }
 
 func GetImageName(name string) string {
 	ext := path.Ext(name)
-	fileName := strings.TrimSuffix(name, ext)
-	fileName = util.EncodeMD5(fileName)
+	var newFileName string
 
-	return fileName + ext
+	newName := com.UrlEncode(name)
+
+	nowTime := time.Now()
+	s := nowTime.Unix() * 1000
+
+	dt := nowTime.UnixNano() / int64(time.Millisecond)
+	dt = dt - s
+	dateRd := util.GenerateRangeNum(0, int(dt))
+	newFileName = util.EncodeMD5(newName + string(dateRd))
+
+	return newFileName + ext
 }
 
 func GetImagePath() string {
 	return config.AppSetting.ImageSavePath
 }
 
-func GetImageFullPath() string {
-	return config.AppSetting.RuntimeRootPath + GetImagePath()
-}
+func CheckImageType(fileBytes []byte) bool {
+	fileType := http.DetectContentType(fileBytes)
 
-func CheckImageExt(fileName string) bool {
-	ext := file.GetExt(fileName)
-	for _, allowExt := range config.AppSetting.ImageAllowExts {
-		if strings.ToUpper(allowExt) == strings.ToUpper(ext) {
+	for _, t := range config.AppSetting.ImageAllowTypes {
+		if t == fileType {
 			return true
 		}
 	}
@@ -69,6 +81,34 @@ func CheckImage(src string) error {
 	perm := file.CheckPermission(src)
 	if perm == true {
 		return fmt.Errorf("file.CheckPermission Permission denied src: %s", src)
+	}
+
+	return nil
+}
+
+func SaveImage(file multipart.File, savePath string) error {
+	savePath = config.AppSetting.RuntimeRootPath + savePath
+
+	fileBytes, _ := ioutil.ReadAll(file)
+	defer file.Close()
+
+	if ! CheckImageType(fileBytes) || ! CheckImageSize(file) {
+		return errors.New("校验图片错误，图片格式或大小有问题")
+	}
+
+	err := CheckImage(savePath)
+	if err != nil {
+		logging.Warn(err)
+		return errors.New("检查图片失败")
+	}
+
+	out, err := os.Create(savePath)
+	defer out.Close()
+
+	_, err = io.Copy(out, bytes.NewReader(fileBytes))
+	if err != nil {
+		logging.Fatal(err)
+		return errors.New("上传图片失败")
 	}
 
 	return nil

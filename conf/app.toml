@@ -8,7 +8,7 @@ ImagePrefixUrl = "http://127.0.0.1:8000"
 ImageSavePath = "upload/images/"
 # MB
 ImageMaxSize = 5
-ImageAllowExts = ".jpg,.jpeg,.png"
+ImageAllowTypes = "image/jpeg,image/jpg,image/jpeg"
 
 LogSavePath = "logs/"
 LogSaveName = "log"
