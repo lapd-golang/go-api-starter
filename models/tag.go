@@ -21,7 +21,7 @@ func (t *Tag) GetTotal(maps interface{}) (count int) {
 	return
 }
 
-func (t *Tag) ExistTagByName(name string) bool {
+func (t *Tag) ExistByName(name string) bool {
 	var tag Tag
 	Eloquent.Select("id").Where("name = ?", name).First(&tag)
 	if tag.ID > 0 {
@@ -31,17 +31,19 @@ func (t *Tag) ExistTagByName(name string) bool {
 	return false
 }
 
-func (t *Tag) AddTag(name string, state int, createdBy string) bool{
-	Eloquent.Create(&Tag {
-		Name : name,
-		State : state,
-		CreatedBy : createdBy,
-	})
+func (t *Tag) Add(name string, state int, createdBy string) int {
+	tag := Tag{
+		Name:      name,
+		State:     state,
+		CreatedBy: createdBy,
+	}
 
-	return true
+	Eloquent.Create(&tag)
+
+	return tag.ID
 }
 
-func (t *Tag) ExistTagByID(id int) bool {
+func (t *Tag) ExistByID(id int) bool {
 	var tag Tag
 	Eloquent.Select("id").Where("id = ?", id).First(&tag)
 	if tag.ID > 0 {
@@ -51,19 +53,19 @@ func (t *Tag) ExistTagByID(id int) bool {
 	return false
 }
 
-func (t *Tag) DeleteTag(id int) bool {
+func (t *Tag) Delete(id int) bool {
 	Eloquent.Where("id = ?", id).Delete(&Tag{})
 
 	return true
 }
 
-func (t *Tag) EditTag(id int, data interface {}) bool {
+func (t *Tag) Edit(id int, data interface{}) bool {
 	Eloquent.Model(&Tag{}).Where("id = ?", id).Updates(data)
 
 	return true
 }
 
-func (t *Tag) CleanAllTag() bool {
+func (t *Tag) CleanAll() bool {
 	Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
 
 	return true

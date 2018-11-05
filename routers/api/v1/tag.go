@@ -65,12 +65,12 @@ func AddTag(c *gin.Context) {
 		return
 	}
 
-	var user models.Tag
+	var tag models.Tag
 
-	if ! user.ExistTagByName(name) {
-		user.AddTag(name, state, createdBy)//TODO:如何获取id？
+	if ! tag.ExistByName(name) {
+		id := tag.Add(name, state, createdBy)
 
-		app.Response(c, e.SUCCESS, "ok", nil)
+		app.Response(c, e.SUCCESS, "ok", id)
 		return
 	} else {
 		app.Response(c, e.ERROR_EXIST_TAG, "已存在该标签名称", nil)
@@ -113,7 +113,7 @@ func EditTag(c *gin.Context) {
 
 	tag := models.Tag{}
 
-	if tag.ExistTagByID(id) {
+	if tag.ExistByID(id) {
 		tag.ModifiedBy = modifiedBy
 		if name != "" {
 			tag.Name = name
@@ -122,7 +122,7 @@ func EditTag(c *gin.Context) {
 			tag.State = state
 		}
 
-		tag.EditTag(id, tag)
+		tag.Edit(id, tag)
 		app.Response(c, e.SUCCESS, "ok", nil)
 		return
 	} else {
@@ -150,8 +150,8 @@ func DeleteTag(c *gin.Context) {
 	}
 
 	var tag models.Tag
-	if tag.ExistTagByID(id) {
-		tag.DeleteTag(id)
+	if tag.ExistByID(id) {
+		tag.Delete(id)
 
 		app.Response(c, e.SUCCESS, "ok", nil)
 		return
