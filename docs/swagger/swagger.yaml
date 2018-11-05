@@ -2,7 +2,7 @@ info:
   contact: {}
   license: {}
 paths:
-  /api/v1/tags:
+  /api/v1/articles:
     get:
       produces:
       - application/json
@@ -11,7 +11,7 @@ paths:
           description: '{"code":200,"data":{"lists": [], "total": 0},"msg":"ok"}'
           schema:
             type: string
-      summary: 获取多个文章标签
+      summary: 获取多个文章
     post:
       parameters:
       - description: Name
@@ -31,11 +31,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code":200,"data":null,"msg":"ok"}'
+          description: '{"code":200,"data":ID,"msg":"ok"}'
           schema:
             type: string
-      summary: 新增文章标签
-  /api/v1/tags/{id}:
+      summary: 新增文章
+  /api/v1/articles/{id}:
     delete:
       parameters:
       - {}
@@ -46,7 +46,16 @@ paths:
           description: '{"code":200,"data":null,"msg":"ok"}'
           schema:
             type: string
-      summary: 删除文章标签
+      summary: 删除文章
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 获取单个文章
     put:
       parameters:
       - {}
@@ -71,5 +80,121 @@ paths:
           description: '{"code":200,"data":null,"msg":"ok"}'
           schema:
             type: string
+      summary: 修改文章
+  /api/v1/tags:
+    get:
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Name
+        in: formData
+        name: name
+        type: string
+      - description: State
+        in: formData
+        name: state
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{"lists": [], "total": 0},"message":"ok"}'
+          schema:
+            type: string
+      summary: 获取多个文章标签
+      tags:
+      - tags
+    post:
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: formData
+        name: state
+        type: integer
+      - description: CreatedBy
+        in: formData
+        name: created_by
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":ID,"message":"ok"}'
+          schema:
+            type: string
+      summary: 新增文章标签
+      tags:
+      - tags
+  /api/v1/tags/{id}:
+    delete:
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":null,"message":"ok"}'
+          schema:
+            type: string
+      summary: 删除文章标签
+      tags:
+      - tags
+    put:
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ID
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: formData
+        name: state
+        type: integer
+      - description: ModifiedBy
+        in: formData
+        name: modified_by
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":null,"message":"ok"}'
+          schema:
+            type: string
       summary: 修改文章标签
+      tags:
+      - tags
 swagger: "2.0"
