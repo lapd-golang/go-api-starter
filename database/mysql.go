@@ -33,11 +33,14 @@ func Setup() {
 	}
 
 	Eloquent.SingularTable(true)
+
 	Eloquent.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	Eloquent.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 	Eloquent.Callback().Delete().Replace("gorm:delete", deleteCallback)
+
 	Eloquent.DB().SetMaxIdleConns(10)
 	Eloquent.DB().SetMaxOpenConns(100)
+	Eloquent.DB().SetConnMaxLifetime(60 * time.Second)
 }
 
 func CloseDB() {
