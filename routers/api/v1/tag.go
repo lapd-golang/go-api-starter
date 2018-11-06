@@ -15,8 +15,8 @@ import (
 // @Tags tags
 // @Produce json
 // @Param Authorization header string true "Bearer Token"
-// @Param name formData string false "Name"
-// @Param state formData int false "State"
+// @Param name query string false "Name"
+// @Param state query int false "State"
 // @Success 200 {string} json "{"code":200,"data":{"lists": [], "total": 0},"message":"ok"}"
 // @Router /api/v1/tags [get]
 func GetTags(c *gin.Context) {

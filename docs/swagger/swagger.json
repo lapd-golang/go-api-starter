@@ -278,13 +278,13 @@
                         "type": "string",
                         "description": "Name",
                         "name": "name",
-                        "in": "formData"
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "formData"
+                        "in": "query"
                     }
                 ],
                 "responses": {

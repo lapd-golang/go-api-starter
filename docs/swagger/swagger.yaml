@@ -180,11 +180,11 @@ paths:
         required: true
         type: string
       - description: Name
-        in: formData
+        in: query
         name: name
         type: string
       - description: State
-        in: formData
+        in: query
         name: state
         type: integer
       produces:
