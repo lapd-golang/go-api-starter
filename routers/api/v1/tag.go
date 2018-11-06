@@ -22,22 +22,20 @@ import (
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 
-	maps := make(map[string]interface{})
-	data := make(map[string]interface{})
-
+	var user models.Tag
 	if name != "" {
-		maps["name"] = name
+		user.Name = name
 	}
 
 	var state int = -1
 	if arg := c.Query("state"); arg != "" {
 		state = com.StrTo(arg).MustInt()
-		maps["state"] = state
+		user.State = state
 	}
 
-	var user models.Tag
-	data["lists"] = user.Get(util.GetPage(c), config.AppSetting.PageSize, maps)
-	data["total"] = user.GetTotal(maps)
+	data := make(map[string]interface{})
+	data["lists"] = user.Get(util.GetPage(c), config.AppSetting.PageSize)
+	data["total"] = user.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)
 }
@@ -72,7 +70,15 @@ func AddTag(c *gin.Context) {
 	var tag models.Tag
 
 	if ! tag.ExistByName(name) {
-		id := tag.Add(name, state, createdBy)
+		tag.Name = name
+		tag.CreatedBy = createdBy
+		tag.State = state
+		id, err := tag.Insert()
+
+		if err != nil {
+			app.Response(c, e.ERROR, "添加失败", nil)
+			return
+		}
 
 		app.Response(c, e.SUCCESS, "ok", id)
 		return
@@ -116,7 +122,7 @@ func EditTag(c *gin.Context) {
 		return
 	}
 
-	tag := models.Tag{}
+	var tag models.Tag
 
 	if tag.ExistByID(id) {
 		tag.ModifiedBy = modifiedBy
@@ -127,7 +133,11 @@ func EditTag(c *gin.Context) {
 			tag.State = state
 		}
 
-		tag.Edit(id, tag)
+		result, err := tag.Update(id)
+		if err != nil || result.ID == 0 {
+			app.Response(c, e.ERROR, "修改失败", nil)
+			return
+		}
 		app.Response(c, e.SUCCESS, "ok", nil)
 		return
 	} else {
@@ -157,7 +167,11 @@ func DeleteTag(c *gin.Context) {
 
 	var tag models.Tag
 	if tag.ExistByID(id) {
-		tag.Delete(id)
+		result, err := tag.Delete(id)
+		if err != nil || result.ID == 0 {
+			app.Response(c, e.ERROR, "删除失败", nil)
+			return
+		}
 
 		app.Response(c, e.SUCCESS, "ok", nil)
 		return

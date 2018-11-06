@@ -11,14 +11,14 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
-func (t *Tag) Get(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
-	database.Eloquent.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
+func (t *Tag) Get(pageNum int, pageSize int) (tags []Tag) {
+	database.Eloquent.Where(t).Offset(pageNum).Limit(pageSize).Find(&tags)
 
 	return
 }
 
-func (t *Tag) GetTotal(maps interface{}) (count int) {
-	database.Eloquent.Model(&Tag{}).Where(maps).Count(&count)
+func (t *Tag) GetTotal() (count int) {
+	database.Eloquent.Model(&Tag{}).Where(t).Count(&count)
 
 	return
 }
@@ -33,16 +33,14 @@ func (t *Tag) ExistByName(name string) bool {
 	return false
 }
 
-func (t *Tag) Add(name string, state int, createdBy string) int {
-	tag := Tag{
-		Name:      name,
-		State:     state,
-		CreatedBy: createdBy,
+func (t *Tag) Insert() (id int, err error) {
+	result := database.Eloquent.Create(&t)
+	id = t.ID
+	if result.Error != nil {
+		err = result.Error
+		return
 	}
-
-	database.Eloquent.Create(&tag)
-
-	return tag.ID
+	return
 }
 
 func (t *Tag) ExistByID(id int) bool {
@@ -55,16 +53,29 @@ func (t *Tag) ExistByID(id int) bool {
 	return false
 }
 
-func (t *Tag) Delete(id int) bool {
-	database.Eloquent.Where("id = ?", id).Delete(&Tag{})
+func (t *Tag) Delete(id int) (tag Tag, err error) {
+	if err = database.Eloquent.Select([]string{"id"}).First(&t, id).Error; err != nil {
+		return
+	}
 
-	return true
+	if err = database.Eloquent.Delete(&t).Error; err != nil {
+		return
+	}
+	tag = *t
+	return
 }
 
-func (t *Tag) Edit(id int, data interface{}) bool {
-	database.Eloquent.Model(&Tag{}).Where("id = ?", id).Updates(data)
+func (t *Tag) Update(id int) (updateTag Tag, err error) {
+	if err = database.Eloquent.Select([]string{"id"}).First(&updateTag, id).Error; err != nil {
+		return
+	}
 
-	return true
+	//参数1:是要修改的数据
+	//参数2:是修改的数据
+	if err = database.Eloquent.Model(&updateTag).Updates(&t).Error; err != nil {
+		return
+	}
+	return
 }
 
 func (t *Tag) CleanAll() bool {
