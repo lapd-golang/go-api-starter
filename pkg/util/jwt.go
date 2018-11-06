@@ -9,8 +9,8 @@ import (
 var jwtSecret = []byte(config.AppSetting.JwtSecret)
 
 type Token struct {
-	Token     string
-	ExpiresAt int64
+	Token     string `json:"token"`
+	ExpiresAt int64  `json:"expires_at"`
 }
 
 type Claims struct {
