@@ -11,11 +11,11 @@ paths:
         required: true
         type: string
       - description: State
-        in: formData
+        in: query
         name: state
         type: integer
       - description: tag_id
-        in: formData
+        in: query
         name: tag_id
         type: integer
       produces:

@@ -26,13 +26,13 @@
                         "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "formData"
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "tag_id",
                         "name": "tag_id",
-                        "in": "formData"
+                        "in": "query"
                     }
                 ],
                 "responses": {

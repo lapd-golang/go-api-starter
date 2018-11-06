@@ -46,19 +46,18 @@ func GetArticle(c *gin.Context) {
 // @Tags articles
 // @Produce json
 // @Param Authorization header string true "Bearer Token"
-// @Param state formData int false "State"
-// @Param tag_id formData int false "tag_id"
+// @Param state query int false "State"
+// @Param tag_id query int false "tag_id"
 // @Success 200 {string} json "{"code":200,"data":{"lists": [], "total": 0},"message":"ok"}"
 // @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
-	data := make(map[string]interface{})
-	maps := make(map[string]interface{})
 	valid := validation.Validation{}
+	var article models.Article
 
 	var state int = -1
 	if arg := c.Query("state"); arg != "" {
 		state = com.StrTo(arg).MustInt()
-		maps["state"] = state
+		article.State = state
 
 		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 	}
@@ -66,7 +65,7 @@ func GetArticles(c *gin.Context) {
 	var tagId int = -1
 	if arg := c.Query("tag_id"); arg != "" {
 		tagId = com.StrTo(arg).MustInt()
-		maps["tag_id"] = tagId
+		article.TagID = tagId
 
 		valid.Min(tagId, 1, "tag_id").Message("标签ID错误")
 	}
@@ -77,10 +76,9 @@ func GetArticles(c *gin.Context) {
 		return
 	}
 
-	article := models.Article{}
-
-	data["lists"] = article.Get(util.GetPage(c), config.AppSetting.PageSize, maps)
-	data["total"] = article.GetTotal(maps)
+	data := make(map[string]interface{})
+	data["lists"] = article.Get(util.GetPage(c), config.AppSetting.PageSize)
+	data["total"] = article.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)
 	return
@@ -123,8 +121,8 @@ func AddArticle(c *gin.Context) {
 		return
 	}
 
-	tag := models.Tag{}
-	article := models.Article{}
+	var tag models.Tag
+	var article models.Article
 	if tag.ExistByID(tagId) {
 		//save image
 		imageName := upload.GetImageName(header.Filename)
@@ -136,16 +134,19 @@ func AddArticle(c *gin.Context) {
 			return
 		}
 
-		data := make(map[string]interface{})
-		data["tag_id"] = tagId
-		data["title"] = title
-		data["desc"] = desc
-		data["content"] = content
-		data["cover_image_url"] = fullPath
-		data["created_by"] = createdBy
-		data["state"] = state
+		article.TagID = tagId
+		article.Title = title
+		article.Desc = desc
+		article.Content = content
+		article.CoverImageUrl = fullPath
+		article.CreatedBy = createdBy
+		article.State = state
 
-		id := article.Add(data)
+		id, err := article.Insert()
+		if err != nil {
+			app.Response(c, e.ERROR, "添加失败", nil)
+			return
+		}
 
 		app.Response(c, e.SUCCESS, "ok", id)
 		return
@@ -197,27 +198,29 @@ func EditArticle(c *gin.Context) {
 		return
 	}
 
-	article := models.Article{}
-	tag := models.Tag{}
+	var article models.Article
+	var tag models.Tag
 	if article.ExistByID(id) {
 		if tag.ExistByID(tagId) {
-			data := make(map[string]interface{})
+			article.ModifiedBy = modifiedBy
 			if tagId > 0 {
-				data["tag_id"] = tagId
+				article.TagID = tagId
 			}
 			if title != "" {
-				data["title"] = title
+				article.Title = title
 			}
 			if desc != "" {
-				data["desc"] = desc
+				article.Desc = desc
 			}
 			if content != "" {
-				data["content"] = content
+				article.Content = content
 			}
 
-			data["modified_by"] = modifiedBy
-
-			article.Edit(id, data)
+			result, err := article.Update(id)
+			if err != nil || result.ID == 0 {
+				app.Response(c, e.ERROR, "修改失败", nil)
+				return
+			}
 			app.Response(c, e.SUCCESS, "ok", nil)
 			return
 		} else {
@@ -249,9 +252,13 @@ func DeleteArticle(c *gin.Context) {
 		return
 	}
 
-	article := models.Article{}
+	var article models.Article
 	if article.ExistByID(id) {
-		article.Delete(id)
+		result, err := article.Delete(id)
+		if err != nil || result.ID == 0 {
+			app.Response(c, e.ERROR, "删除失败", nil)
+			return
+		}
 		app.Response(c, e.SUCCESS, "ok", nil)
 		return
 	} else {
