@@ -287,4 +287,25 @@ paths:
       summary: 修改文章标签
       tags:
       - tags
+  /auth:
+    post:
+      parameters:
+      - description: username
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{"token": "", "expires_at": 0},"message":"ok"}'
+          schema:
+            type: string
+      summary: 授权
 swagger: "2.0"

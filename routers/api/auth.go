@@ -14,6 +14,12 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
+// @Summary 授权
+// @Produce json
+// @Param username formData string true "username"
+// @Param password formData string true "password"
+// @Success 200 {string} json "{"code":200,"data":{"token": "", "expires_at": 0},"message":"ok"}"
+// @Router /auth [post]
 func GetAuth(c *gin.Context) {
 	valid := validation.Validation{}
 
@@ -25,7 +31,7 @@ func GetAuth(c *gin.Context) {
 
 	if !ok {
 		app.MarkErrors(valid.Errors)
-		app.Response(c, e.INVALID_PARAMS, "请求参数错误", nil)
+		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
 
