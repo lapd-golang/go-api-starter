@@ -5,7 +5,6 @@ import (
 	"admin-server/pkg/app"
 	"admin-server/pkg/config"
 	"admin-server/pkg/e"
-	"admin-server/pkg/logging"
 	"admin-server/pkg/util"
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
@@ -65,8 +64,7 @@ func AddTag(c *gin.Context) {
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
-
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
@@ -113,8 +111,7 @@ func EditTag(c *gin.Context) {
 	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
-
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
@@ -153,8 +150,7 @@ func DeleteTag(c *gin.Context) {
 	valid.Min(id, 1, "id").Message("请求参数错误")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
-
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}

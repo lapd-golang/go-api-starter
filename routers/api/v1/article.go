@@ -5,7 +5,6 @@ import (
 	"admin-server/pkg/app"
 	"admin-server/pkg/config"
 	"admin-server/pkg/e"
-	"admin-server/pkg/logging"
 	"admin-server/pkg/upload"
 	"admin-server/pkg/util"
 	"github.com/Unknwon/com"
@@ -27,7 +26,7 @@ func GetArticle(c *gin.Context) {
 	valid.Min(id, 1, "id").Message("ID错误")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
@@ -73,7 +72,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
@@ -119,8 +118,7 @@ func AddArticle(c *gin.Context) {
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
-
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
@@ -194,7 +192,7 @@ func EditArticle(c *gin.Context) {
 	valid.MaxSize(modifiedBy, 100, "modified_by").Message("修改人最长为100字符")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
@@ -246,7 +244,7 @@ func DeleteArticle(c *gin.Context) {
 	valid.Min(id, 1, "id").Message("ID错误")
 
 	if valid.HasErrors() {
-		logging.Info(valid.Errors)
+		app.MarkErrors(valid.Errors)
 		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
 		return
 	}
