@@ -1,5 +1,7 @@
 package models
 
+import "admin-server/database"
+
 type Article struct {
 	Base
 
@@ -17,7 +19,7 @@ type Article struct {
 
 func (a Article) ExistByID(id int) bool {
 	var article Article
-	Eloquent.Select("id").Where("id = ?", id).First(&article)
+	database.Eloquent.Select("id").Where("id = ?", id).First(&article)
 
 	if article.ID > 0 {
 		return true
@@ -27,26 +29,26 @@ func (a Article) ExistByID(id int) bool {
 }
 
 func (a Article) GetTotal(maps interface {}) (count int){
-	Eloquent.Model(&Article{}).Where(maps).Count(&count)
+	database.Eloquent.Model(&Article{}).Where(maps).Count(&count)
 
 	return
 }
 
 func (a Article) Get(pageNum int, pageSize int, maps interface {}) (articles []Article) {
-	Eloquent.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
+	database.Eloquent.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles)
 
 	return
 }
 
 func (a Article) GetById(id int) (article Article) {
-	Eloquent.Where("id = ?", id).First(&article)
-	Eloquent.Model(&article).Related(&article.Tag)
+	database.Eloquent.Where("id = ?", id).First(&article)
+	database.Eloquent.Model(&article).Related(&article.Tag)
 
 	return
 }
 
 func (a Article) Edit(id int, data interface {}) bool {
-	Eloquent.Model(&Article{}).Where("id = ?", id).Updates(data)
+	database.Eloquent.Model(&Article{}).Where("id = ?", id).Updates(data)
 
 	return true
 }
@@ -62,19 +64,19 @@ func (a Article) Add(data map[string]interface {}) int {
 		CoverImageUrl: data["cover_image_url"].(string),
 	}
 
-	Eloquent.Create(&article)
+	database.Eloquent.Create(&article)
 
 	return article.ID
 }
 
 func (a Article) Delete(id int) bool {
-	Eloquent.Where("id = ?", id).Delete(Article{})
+	database.Eloquent.Where("id = ?", id).Delete(Article{})
 
 	return true
 }
 
 func (a Article) CleanAll() bool {
-	Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
+	database.Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
 
 	return true
 }

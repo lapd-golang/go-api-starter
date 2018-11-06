@@ -1,7 +1,7 @@
 package main
 
 import (
-	"admin-server/models"
+	"admin-server/database"
 	"admin-server/pkg/config"
 	"admin-server/pkg/gredis"
 	"admin-server/pkg/logging"
@@ -16,7 +16,7 @@ import (
 
 func main() {
 	config.Setup()
-	models.Setup()
+	database.Setup()
 	logging.Setup()
 	gredis.Setup()
 

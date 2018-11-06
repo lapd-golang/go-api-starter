@@ -1,5 +1,7 @@
 package models
 
+import "admin-server/database"
+
 type User struct {
 	Base
 
@@ -8,7 +10,7 @@ type User struct {
 }
 
 func (u *User) GetByUsernameAndPassword(username string, password string) (user User) {
-	Eloquent.Where(User{Username: username, Password: password}).First(&user)
+	database.Eloquent.Where(User{Username: username, Password: password}).First(&user)
 
 	return
 }
