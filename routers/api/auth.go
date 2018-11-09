@@ -35,17 +35,23 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	isExist := models.CheckAuth(username, password)
-	if !isExist {
+	user := models.User{
+		Username:username,
+		Password:password,
+	}
+	user = user.CheckUser()
+
+	if user.ID <= 0 {
 		app.Response(c, e.ERROR_AUTH, "账号或密码错误", nil)
 		return
 	}
 
-	token, err := util.GenerateToken(username, password)
+	j := util.NewJWT()
+	tokenData, err := j.GenerateToken(user.ID, user.Username, c.Request.UserAgent())
 	if err != nil {
 		app.Response(c, e.ERROR_AUTH_TOKEN, "Token生成失败", nil)
 		return
 	}
 
-	app.Response(c, e.SUCCESS, "ok", token)
+	app.Response(c, e.SUCCESS, "ok", tokenData)
 }

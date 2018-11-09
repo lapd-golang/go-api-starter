@@ -45,21 +45,20 @@ type database struct {
 
 var DatabaseSetting = &database{}
 
-type redisSetting struct {
+type redis struct {
 	Host        string
+	Port        string
 	Password    string
-	MaxIdle     int
 	MaxActive   int
-	IdleTimeout time.Duration
 }
 
-var RedisSetting = &redisSetting{}
+var RedisSetting = &redis{}
 
 type tomlConfig struct {
 	App      app
 	Server   server
 	Database database
-	RedisSetting redisSetting
+	Redis redis
 }
 
 
@@ -88,5 +87,5 @@ func Setup() {
 
 	DatabaseSetting = &cfg.Database
 
-	RedisSetting = &cfg.RedisSetting
+	RedisSetting = &cfg.Redis
 }
