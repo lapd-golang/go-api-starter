@@ -7,14 +7,23 @@ import (
 	"time"
 )
 
+var Conf *tomlConfig
+
+type tomlConfig struct {
+	App      app
+	Server   server
+	Database database
+	Redis    redis
+}
+
 type app struct {
 	JwtSecret       string
 	PageSize        int
 	RuntimeRootPath string
 
-	ImagePrefixUrl string
-	ImageSavePath  string
-	ImageMaxSize   int
+	ImagePrefixUrl  string
+	ImageSavePath   string
+	ImageMaxSize    int
 	ImageAllowTypes []string
 
 	LogSavePath string
@@ -23,16 +32,12 @@ type app struct {
 	TimeFormat  string
 }
 
-var AppSetting = &app{}
-
 type server struct {
 	RunMode      string
 	HttpPort     int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
 }
-
-var ServerSetting = &server{}
 
 type database struct {
 	Type        string
@@ -43,24 +48,12 @@ type database struct {
 	TablePrefix string
 }
 
-var DatabaseSetting = &database{}
-
 type redis struct {
-	Host        string
-	Port        string
-	Password    string
-	MaxActive   int
+	Host      string
+	Port      string
+	Password  string
+	MaxActive int
 }
-
-var RedisSetting = &redis{}
-
-type tomlConfig struct {
-	App      app
-	Server   server
-	Database database
-	Redis redis
-}
-
 
 func Setup() {
 	filePath, err := filepath.Abs("conf/app.toml")
@@ -69,23 +62,16 @@ func Setup() {
 	}
 	fmt.Printf("parse toml file once. filePath: %s\n", filePath)
 
-	var cfg tomlConfig
 	viper.SetConfigName("app")   // name of config file (without extension)
 	viper.AddConfigPath("conf/") // path to look for the config file in
 	err2 := viper.ReadInConfig() // Find and read the config file
 	if err2 != nil { // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
-	viper.Unmarshal(&cfg)
+	viper.Unmarshal(&Conf)
 
-	AppSetting = &cfg.App
-	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
+	Conf.App.ImageMaxSize = Conf.App.ImageMaxSize * 1024 * 1024
 
-	ServerSetting = &cfg.Server
-	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
-	ServerSetting.WriteTimeout = ServerSetting.ReadTimeout * time.Second
-
-	DatabaseSetting = &cfg.Database
-
-	RedisSetting = &cfg.Redis
+	Conf.Server.ReadTimeout = Conf.Server.ReadTimeout * time.Second
+	Conf.Server.WriteTimeout = Conf.Server.ReadTimeout * time.Second
 }

@@ -34,7 +34,7 @@ func GetTags(c *gin.Context) {
 	}
 
 	data := make(map[string]interface{})
-	data["lists"] = user.Get(util.GetPage(c), config.AppSetting.PageSize)
+	data["lists"] = user.Get(util.GetPage(c), config.Conf.App.PageSize)
 	data["total"] = user.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)

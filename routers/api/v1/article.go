@@ -77,7 +77,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	data := make(map[string]interface{})
-	data["lists"] = article.Get(util.GetPage(c), config.AppSetting.PageSize)
+	data["lists"] = article.Get(util.GetPage(c), config.Conf.App.PageSize)
 	data["total"] = article.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)

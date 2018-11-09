@@ -15,9 +15,9 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	gin.SetMode(config.ServerSetting.RunMode)
+	gin.SetMode(config.Conf.Server.RunMode)
 
-	r.StaticFS("/upload", http.Dir(config.AppSetting.RuntimeRootPath + "upload"))
+	r.StaticFS("/upload", http.Dir(config.Conf.App.RuntimeRootPath + "upload"))
 	r.Static("/docs", "docs/swagger")//docs
 
 	r.POST("/auth", api.GetAuth)

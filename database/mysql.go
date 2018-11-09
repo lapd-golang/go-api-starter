@@ -14,22 +14,22 @@ var Eloquent *gorm.DB
 func Setup() {
 	var err error
 
-	Eloquent, err = gorm.Open(config.DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		config.DatabaseSetting.User,
-		config.DatabaseSetting.Password,
-		config.DatabaseSetting.Host,
-		config.DatabaseSetting.Name))
+	Eloquent, err = gorm.Open(config.Conf.Database.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		config.Conf.Database.User,
+		config.Conf.Database.Password,
+		config.Conf.Database.Host,
+		config.Conf.Database.Name))
 
 	if err != nil {
 		log.Println(err)
 	}
 
-	if config.ServerSetting.RunMode == "debug" {
+	if config.Conf.Server.RunMode == "debug" {
 		Eloquent.LogMode(true)
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return config.DatabaseSetting.TablePrefix + defaultTableName
+		return config.Conf.Database.TablePrefix + defaultTableName
 	}
 
 	Eloquent.SingularTable(true)

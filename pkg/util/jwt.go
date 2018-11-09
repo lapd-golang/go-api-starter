@@ -20,7 +20,6 @@ var (
 	TokenNotValidYet error = errors.New("Token not active yet")
 	TokenMalformed   error = errors.New("That's not even a token")
 	TokenInvalid     error = errors.New("Couldn't handle this token:")
-	SignKey                = config.AppSetting.JwtSecret
 )
 
 //载荷，可以加一些自己需要的信息
@@ -42,19 +41,8 @@ type TokenData struct {
 //新建一个jwt实例
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(GetSignKey()),
+		[]byte(config.Conf.App.JwtSecret),
 	}
-}
-
-//获取signKey
-func GetSignKey() string {
-	return SignKey
-}
-
-//这是SignKey
-func SetSignKey(key string) string {
-	SignKey = key
-	return SignKey
 }
 
 //GenerateToken 生成一个token

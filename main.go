@@ -21,9 +21,9 @@ func main() {
 	defer database.Eloquent.Close()
 
 	routersInit := routers.InitRouter()
-	readTimeout := config.ServerSetting.ReadTimeout
-	writeTimeout := config.ServerSetting.WriteTimeout
-	endPoint := fmt.Sprintf(":%d", config.ServerSetting.HttpPort)
+	readTimeout := config.Conf.Server.ReadTimeout
+	writeTimeout := config.Conf.Server.WriteTimeout
+	endPoint := fmt.Sprintf(":%d", config.Conf.Server.HttpPort)
 	maxHeaderBytes := 1 << 20
 
 	if runtime.GOOS == "windows" {

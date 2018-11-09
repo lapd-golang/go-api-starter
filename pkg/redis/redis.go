@@ -8,9 +8,9 @@ import (
 
 func factory(name string) *redis.Client {
 	//TODO:master/slave支持未完成
-	host := config.RedisSetting.Host
-	port := config.RedisSetting.Port
-	password := config.RedisSetting.Password
+	host := config.Conf.Redis.Host
+	port := config.Conf.Redis.Port
+	password := config.Conf.Redis.Password
 	fmt.Printf("conf-redis: %s:%s - %s\r\n", host, port, password)
 
 	address := fmt.Sprintf("%s:%s", host, port)
@@ -18,7 +18,7 @@ func factory(name string) *redis.Client {
 		Addr:        address,
 		Password:    password,
 		DB:          0,
-		PoolSize:    config.RedisSetting.MaxActive,
+		PoolSize:    config.Conf.Redis.MaxActive,
 	})
 }
 
