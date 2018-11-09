@@ -113,5 +113,7 @@ func RefreshToken(c *gin.Context) {
 		return
 	}
 
+	redis.Master().Del(accessToken)//移除旧token
+
 	app.Response(c, e.SUCCESS, "ok", tokenData)
 }
