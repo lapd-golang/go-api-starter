@@ -1,16 +1,16 @@
 package redis
 
 import (
-	"admin-server/pkg/config"
 	"fmt"
+	"github.com/spf13/viper"
 	"gopkg.in/redis.v5"
 )
 
 func factory(name string) *redis.Client {
-	//TODO:master/slave支持未完成
-	host := config.RedisSetting.Host
-	port := config.RedisSetting.Port
-	password := config.RedisSetting.Password
+	host := viper.GetString("redis."+name+".host")
+	port := viper.GetString("redis."+name+".port")
+	password := viper.GetString("redis."+name+".password")
+	poolSize := viper.GetInt("redis."+name+".maxactive")
 	fmt.Printf("conf-redis: %s:%s - %s\r\n", host, port, password)
 
 	address := fmt.Sprintf("%s:%s", host, port)
@@ -18,7 +18,7 @@ func factory(name string) *redis.Client {
 		Addr:        address,
 		Password:    password,
 		DB:          0,
-		PoolSize:    config.RedisSetting.MaxActive,
+		PoolSize:    poolSize,
 	})
 }
 

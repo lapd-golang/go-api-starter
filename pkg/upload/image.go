@@ -20,7 +20,7 @@ import (
 )
 
 func GetImageFullUrl(path string) string {
-	return config.AppSetting.ImagePrefixUrl + "/" + path
+	return config.Conf.App.ImagePrefixUrl + "/" + path
 }
 
 func GetImageName(name string) string {
@@ -41,13 +41,13 @@ func GetImageName(name string) string {
 }
 
 func GetImagePath() string {
-	return config.AppSetting.ImageSavePath
+	return config.Conf.App.ImageSavePath
 }
 
 func CheckImageType(fileBytes []byte) bool {
 	fileType := http.DetectContentType(fileBytes)
 
-	for _, t := range config.AppSetting.ImageAllowTypes {
+	for _, t := range config.Conf.App.ImageAllowTypes {
 		if t == fileType {
 			return true
 		}
@@ -64,7 +64,7 @@ func CheckImageSize(f multipart.File) bool {
 		return false
 	}
 
-	return size <= config.AppSetting.ImageMaxSize
+	return size <= config.Conf.App.ImageMaxSize
 }
 
 func CheckImage(src string) error {
@@ -87,7 +87,7 @@ func CheckImage(src string) error {
 }
 
 func SaveImage(file multipart.File, savePath string) error {
-	savePath = config.AppSetting.RuntimeRootPath + savePath
+	savePath = config.Conf.App.RuntimeRootPath + savePath
 
 	fileBytes, _ := ioutil.ReadAll(file)
 	defer file.Close()
