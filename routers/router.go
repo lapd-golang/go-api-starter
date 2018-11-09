@@ -21,6 +21,7 @@ func InitRouter() *gin.Engine {
 	r.Static("/docs", "docs/swagger")//docs
 
 	r.POST("/auth", api.GetAuth)
+	r.POST("/refreshToken", api.RefreshToken)
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWTAuth())

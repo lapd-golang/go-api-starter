@@ -26,7 +26,7 @@ func JWTAuth() gin.HandlerFunc {
 
 		isExist := redis.Master().Exists(token)
 		if isExist.Val() != true {
-			app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT, "无效Token", nil)
+			app.Response(c, e.ERROR_AUTH, "无效Token", nil)
 			return
 		}
 
