@@ -31,7 +31,13 @@ Name = "go_blog"
 TablePrefix = ""
 
 [redis]
-Host = "127.0.0.1"
-Port = "6379"
-Password = "123456"
-MaxActive = 30
+  [redis.master]
+      Host = "127.0.0.1"
+      Port = "6379"
+      Password = "123456"
+      MaxActive = 30
+  [redis.slave]
+      Host = "127.0.0.2"
+      Port = "6380"
+      Password = "654321"
+      MaxActive = 30

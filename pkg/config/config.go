@@ -13,7 +13,7 @@ type tomlConfig struct {
 	App      app
 	Server   server
 	Database database
-	Redis    redis
+	Redis    map[string]redis
 }
 
 type app struct {
