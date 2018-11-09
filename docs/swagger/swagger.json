@@ -455,7 +455,39 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\":200,\"data\":{\"token\": \"\", \"expires_at\": 0},\"message\":\"ok\"}",
+                        "description": "{\"code\":200,\"data\":{\"token_type\": \"\", \"access_token\": \"\", \"refresh_token\": \"\", \"expires_at\": 0},\"message\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/refreshToken": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "刷新accessToken",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "access_token",
+                        "name": "access_token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "refresh_token",
+                        "name": "refresh_token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{\"token_type\": \"\", \"access_token\": \"\", \"refresh_token\": \"\", \"expires_at\": 0},\"message\":\"ok\"}",
                         "schema": {
                             "type": "string"
                         }

@@ -3,7 +3,6 @@ package main
 import (
 	"admin-server/database"
 	"admin-server/pkg/config"
-	"admin-server/pkg/gredis"
 	"admin-server/pkg/logging"
 	"admin-server/routers"
 	"fmt"
@@ -18,7 +17,6 @@ func main() {
 	config.Setup()
 	database.Setup()
 	logging.Setup()
-	gredis.Setup()
 
 	defer database.Eloquent.Close()
 

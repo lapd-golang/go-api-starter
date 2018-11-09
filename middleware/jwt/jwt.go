@@ -3,13 +3,14 @@ package jwt
 import (
 	"admin-server/pkg/app"
 	"admin-server/pkg/e"
+	"admin-server/pkg/redis"
 	"admin-server/pkg/util"
 	"github.com/gin-gonic/gin"
 	"strings"
 	"time"
 )
 
-func JWT() gin.HandlerFunc {
+func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
 		if token == "" {
@@ -23,7 +24,14 @@ func JWT() gin.HandlerFunc {
 		}
 		token = parts[1]
 
-		claims, err := util.ParseToken(token)
+		isExist := redis.Master().Exists(token)
+		if isExist.Val() != true {
+			app.Response(c, e.ERROR_AUTH, "无效Token", nil)
+			return
+		}
+
+		j := util.NewJWT()
+		claims, err := j.ParseToken(token)
 		if err != nil {
 			app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_FAIL, "Token鉴权失败", nil)
 			return
@@ -31,6 +39,9 @@ func JWT() gin.HandlerFunc {
 			app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT, "Token已超时", nil)
 			return
 		}
+
+		//继续交由下一个路由处理,并将解析出的信息传递下去
+		c.Set("claims", claims)
 
 		c.Next()
 	}
