@@ -7,18 +7,18 @@ import (
 )
 
 func factory(name string) *redis.Client {
-	host := viper.GetString("redis."+name+".host")
-	port := viper.GetString("redis."+name+".port")
-	password := viper.GetString("redis."+name+".password")
-	poolSize := viper.GetInt("redis."+name+".maxactive")
+	host := viper.GetString("redis." + name + ".host")
+	port := viper.GetString("redis." + name + ".port")
+	password := viper.GetString("redis." + name + ".password")
+	poolSize := viper.GetInt("redis." + name + ".maxactive")
 	fmt.Printf("conf-redis: %s:%s - %s\r\n", host, port, password)
 
 	address := fmt.Sprintf("%s:%s", host, port)
 	return redis.NewClient(&redis.Options{
-		Addr:        address,
-		Password:    password,
-		DB:          0,
-		PoolSize:    poolSize,
+		Addr:     address,
+		Password: password,
+		DB:       0,
+		PoolSize: poolSize,
 	})
 }
 
