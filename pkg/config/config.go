@@ -75,3 +75,19 @@ func Setup() {
 	Conf.Server.ReadTimeout = Conf.Server.ReadTimeout * time.Second
 	Conf.Server.WriteTimeout = Conf.Server.ReadTimeout * time.Second
 }
+
+func (t *tomlConfig) GetString(key string) string {
+	return viper.GetString(key)
+}
+
+func (t *tomlConfig) GetInt(key string) int {
+	return viper.GetInt(key)
+}
+
+func (t *tomlConfig) GetBool(key string) bool {
+	return viper.GetBool(key)
+}
+
+func (t *tomlConfig) GetDuration(key string) time.Duration {
+	return viper.GetDuration(key)
+}
