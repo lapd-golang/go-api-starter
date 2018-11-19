@@ -3,7 +3,7 @@ package main
 import (
 	"admin-server/database"
 	"admin-server/pkg/config"
-	"admin-server/pkg/logging"
+	"admin-server/pkg/util"
 	"admin-server/routers"
 	"fmt"
 	"github.com/fvbock/endless"
@@ -16,9 +16,8 @@ import (
 func main() {
 	config.Setup()
 	database.Setup()
-	logging.Setup()
-
 	defer database.Eloquent.Close()
+	util.Setup()
 
 	routersInit := routers.InitRouter()
 	readTimeout := config.Conf.Server.ReadTimeout

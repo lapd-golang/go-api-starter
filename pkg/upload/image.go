@@ -3,7 +3,6 @@ package upload
 import (
 	"admin-server/pkg/config"
 	"admin-server/pkg/file"
-	"admin-server/pkg/logging"
 	"admin-server/pkg/util"
 	"bytes"
 	"errors"
@@ -60,7 +59,7 @@ func CheckImageSize(f multipart.File) bool {
 	size, err := file.GetSize(f)
 	if err != nil {
 		log.Println(err)
-		logging.Warn(err)
+		util.Log.Warn(err)
 		return false
 	}
 
@@ -98,7 +97,7 @@ func SaveImage(file multipart.File, savePath string) error {
 
 	err := CheckImage(savePath)
 	if err != nil {
-		logging.Warn(err)
+		util.Log.Warn(err)
 		return errors.New("检查图片失败")
 	}
 
@@ -107,7 +106,7 @@ func SaveImage(file multipart.File, savePath string) error {
 
 	_, err = io.Copy(out, bytes.NewReader(fileBytes))
 	if err != nil {
-		logging.Fatal(err)
+		util.Log.Fatal(err)
 		return errors.New("上传图片失败")
 	}
 

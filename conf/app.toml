@@ -12,8 +12,7 @@ ImageAllowTypes = "image/jpeg,image/jpg,image/jpeg"
 
 LogSavePath = "logs/"
 LogSaveName = "log"
-LogFileExt = "log"
-TimeFormat = 20060102
+LogFileExt = ".log"
 
 [server]
 #debug or release
