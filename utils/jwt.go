@@ -1,8 +1,8 @@
-package util
+package utils
 
 import (
-	"admin-server/pkg/config"
-	"admin-server/pkg/redis"
+	"admin-server/utils/config"
+	"admin-server/utils/redis"
 	"encoding/json"
 	"errors"
 	"github.com/dgrijalva/jwt-go"

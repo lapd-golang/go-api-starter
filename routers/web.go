@@ -2,7 +2,7 @@ package routers
 
 import (
 	"admin-server/controllers/web"
-	"admin-server/pkg/config"
+	"admin-server/utils/config"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

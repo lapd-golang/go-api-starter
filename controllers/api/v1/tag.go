@@ -2,10 +2,10 @@ package v1
 
 import (
 	"admin-server/models"
-	"admin-server/pkg/app"
-	"admin-server/pkg/config"
-	"admin-server/pkg/e"
-	"admin-server/pkg/util"
+	"admin-server/utils"
+	"admin-server/utils/app"
+	"admin-server/utils/config"
+	"admin-server/utils/e"
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -34,7 +34,7 @@ func GetTags(c *gin.Context) {
 	}
 
 	data := make(map[string]interface{})
-	data["lists"] = user.Get(util.GetPage(c), config.Conf.App.PageSize)
+	data["lists"] = user.Get(utils.GetPage(c), config.Conf.App.PageSize)
 	data["total"] = user.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)

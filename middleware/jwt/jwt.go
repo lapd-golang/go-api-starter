@@ -1,10 +1,10 @@
 package jwt
 
 import (
-	"admin-server/pkg/app"
-	"admin-server/pkg/e"
-	"admin-server/pkg/redis"
-	"admin-server/pkg/util"
+	"admin-server/utils"
+	"admin-server/utils/app"
+	"admin-server/utils/e"
+	"admin-server/utils/redis"
 	"github.com/gin-gonic/gin"
 	"strings"
 	"time"
@@ -30,7 +30,7 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 
-		j := util.NewJWT()
+		j := utils.NewJWT()
 		claims, err := j.ParseToken(token)
 		if err != nil {
 			app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_FAIL, "Token鉴权失败", nil)

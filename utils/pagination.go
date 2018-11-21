@@ -1,7 +1,7 @@
-package util
+package utils
 
 import (
-	"admin-server/pkg/config"
+	"admin-server/utils/config"
 	"github.com/Unknwon/com"
 	"github.com/gin-gonic/gin"
 )
