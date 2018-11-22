@@ -85,19 +85,21 @@ func CheckImage(src string) error {
 	return nil
 }
 
-func SaveImage(file multipart.File, savePath string) error {
-	fileBytes, _ := ioutil.ReadAll(file)
-	defer file.Close()
+func SaveImage(f multipart.File, path string, imageName string) error {
+	fileBytes, _ := ioutil.ReadAll(f)
+	defer f.Close()
 
-	if ! CheckImageType(fileBytes) || ! CheckImageSize(file) {
+	if ! CheckImageType(fileBytes) || ! CheckImageSize(f) {
 		return errors.New("校验图片错误，图片格式或大小有问题")
 	}
 
-	err := CheckImage(savePath)
+	err := CheckImage(path)
 	if err != nil {
 		utils.Log.Warn(err)
 		return errors.New("检查图片失败")
 	}
+
+	savePath := path + imageName
 
 	out, err := os.Create(savePath)
 	defer out.Close()

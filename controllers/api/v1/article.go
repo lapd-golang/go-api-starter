@@ -128,7 +128,7 @@ func AddArticle(c *gin.Context) {
 		imageName := upload.GetImageName(header.Filename)
 		path := upload.GetImagePath()
 		fullPath := path + imageName
-		err := upload.SaveImage(coverImageUrl, fullPath)
+		err := upload.SaveImage(coverImageUrl, path, imageName)
 		if err != nil {
 			app.Response(c, e.ERROR_UPLOAD_SAVE_IMAGE_FAIL, err.Error(), nil)
 			return
