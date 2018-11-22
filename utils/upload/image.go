@@ -86,8 +86,6 @@ func CheckImage(src string) error {
 }
 
 func SaveImage(file multipart.File, savePath string) error {
-	savePath = config.Conf.App.RuntimeRootPath + savePath
-
 	fileBytes, _ := ioutil.ReadAll(file)
 	defer file.Close()
 

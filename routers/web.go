@@ -2,9 +2,7 @@ package routers
 
 import (
 	"admin-server/controllers/web"
-	"admin-server/utils/config"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func initWebRouter(r *gin.Engine) *gin.Engine {
@@ -12,7 +10,7 @@ func initWebRouter(r *gin.Engine) *gin.Engine {
 
 	r.GET("/welcome", web.Welcome)
 
-	r.StaticFS("/upload", http.Dir(config.Conf.App.RuntimeRootPath + "upload"))
+	r.Static("/static", "static")//静态资源目录，包含上传目录
 	r.Static("/docs", "docs/swagger")//docs
 
 	return r
