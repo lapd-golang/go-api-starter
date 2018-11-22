@@ -2,11 +2,11 @@ package v1
 
 import (
 	"admin-server/models"
-	"admin-server/pkg/app"
-	"admin-server/pkg/config"
-	"admin-server/pkg/e"
-	"admin-server/pkg/upload"
-	"admin-server/pkg/util"
+	"admin-server/utils"
+	"admin-server/utils/app"
+	"admin-server/utils/config"
+	"admin-server/utils/e"
+	"admin-server/utils/upload"
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -77,7 +77,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	data := make(map[string]interface{})
-	data["lists"] = article.Get(util.GetPage(c), config.Conf.App.PageSize)
+	data["lists"] = article.Get(utils.GetPage(c), config.Conf.App.PageSize)
 	data["total"] = article.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)

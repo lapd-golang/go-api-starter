@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"admin-server/pkg/config"
+	"admin-server/utils/config"
 	"fmt"
 	"gopkg.in/redis.v5"
 )

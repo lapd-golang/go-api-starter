@@ -2,10 +2,10 @@ package api
 
 import (
 	"admin-server/models"
-	"admin-server/pkg/app"
-	"admin-server/pkg/e"
-	"admin-server/pkg/redis"
-	"admin-server/pkg/util"
+	"admin-server/utils"
+	"admin-server/utils/app"
+	"admin-server/utils/e"
+	"admin-server/utils/redis"
 	"encoding/json"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -49,7 +49,7 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	j := util.NewJWT()
+	j := utils.NewJWT()
 	tokenData, err := j.GenerateToken(user.ID, user.Username, c.Request.UserAgent())
 	if err != nil {
 		app.Response(c, e.ERROR_AUTH_TOKEN, "Token生成失败", nil)
@@ -88,7 +88,7 @@ func RefreshToken(c *gin.Context) {
 	}
 
 	//解析accessToken，验证过期
-	j := util.NewJWT()
+	j := utils.NewJWT()
 	claims, err := j.ParseToken(accessToken)
 	if err != nil {
 		app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_FAIL, "Token鉴权失败", nil)
@@ -99,7 +99,7 @@ func RefreshToken(c *gin.Context) {
 	}
 
 	//判断是否相同UserAgent；验证refreshToken
-	var t util.TokenData
+	var t utils.TokenData
 	json.Unmarshal([]byte(dbToken.Val()), &t)
 	if claims.UserAgent != c.Request.UserAgent() || refreshToken != t.RefreshToken {
 		app.Response(c, e.ERROR_AUTH, "无效Token", nil)

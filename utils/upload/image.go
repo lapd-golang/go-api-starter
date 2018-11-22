@@ -1,9 +1,9 @@
 package upload
 
 import (
-	"admin-server/pkg/config"
-	"admin-server/pkg/file"
-	"admin-server/pkg/util"
+	"admin-server/utils"
+	"admin-server/utils/config"
+	"admin-server/utils/file"
 	"bytes"
 	"errors"
 	"fmt"
@@ -33,8 +33,8 @@ func GetImageName(name string) string {
 
 	dt := nowTime.UnixNano() / int64(time.Millisecond)
 	dt = dt - s
-	dateRd := util.GenerateRangeNum(0, int(dt))
-	newFileName = util.EncodeMD5(newName + string(dateRd))
+	dateRd := utils.GenerateRangeNum(0, int(dt))
+	newFileName = utils.EncodeMD5(newName + string(dateRd))
 
 	return newFileName + ext
 }
@@ -59,7 +59,7 @@ func CheckImageSize(f multipart.File) bool {
 	size, err := file.GetSize(f)
 	if err != nil {
 		log.Println(err)
-		util.Log.Warn(err)
+		utils.Log.Warn(err)
 		return false
 	}
 
@@ -86,8 +86,6 @@ func CheckImage(src string) error {
 }
 
 func SaveImage(file multipart.File, savePath string) error {
-	savePath = config.Conf.App.RuntimeRootPath + savePath
-
 	fileBytes, _ := ioutil.ReadAll(file)
 	defer file.Close()
 
@@ -97,7 +95,7 @@ func SaveImage(file multipart.File, savePath string) error {
 
 	err := CheckImage(savePath)
 	if err != nil {
-		util.Log.Warn(err)
+		utils.Log.Warn(err)
 		return errors.New("检查图片失败")
 	}
 
@@ -106,7 +104,7 @@ func SaveImage(file multipart.File, savePath string) error {
 
 	_, err = io.Copy(out, bytes.NewReader(fileBytes))
 	if err != nil {
-		util.Log.Fatal(err)
+		utils.Log.Fatal(err)
 		return errors.New("上传图片失败")
 	}
 

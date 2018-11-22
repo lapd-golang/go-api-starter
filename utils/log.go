@@ -1,7 +1,7 @@
-package util
+package utils
 
 import (
-	"admin-server/pkg/config"
+	"admin-server/utils/config"
 	"github.com/lestrrat/go-file-rotatelogs"
 	"github.com/pkg/errors"
 	"github.com/rifflock/lfshook"
@@ -12,10 +12,10 @@ import (
 
 var Log *logrus.Logger
 
-func Setup() {
+func LogSetup() {
 	Log = logrus.New()
 	Log.SetLevel(logrus.InfoLevel)
-	ConfigLocalFilesystemLogger("runtime/logs", config.Conf.App.LogSaveName, time.Hour*24*30, time.Second*60*60*24-1)
+	ConfigLocalFilesystemLogger("logs", config.Conf.App.LogSaveName, time.Hour*24*30, time.Second*60*60*24-1)
 }
 
 func ConfigLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
