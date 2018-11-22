@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"admin-server/utils/config"
 	"github.com/Unknwon/com"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/utils/config"
 )
 
 func GetPage(c *gin.Context) int {

@@ -1,6 +1,6 @@
 package models
 
-import "admin-server/database"
+import "go-admin-starter/database"
 
 type User struct {
 	Base

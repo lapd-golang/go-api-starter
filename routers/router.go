@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"admin-server/utils/config"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/utils/config"
 )
 
 func InitRouter() *gin.Engine {

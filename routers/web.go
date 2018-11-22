@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"admin-server/controllers/web"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/controllers/web"
 )
 
 func initWebRouter(r *gin.Engine) *gin.Engine {

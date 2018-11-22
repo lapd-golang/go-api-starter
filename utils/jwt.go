@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"admin-server/utils/config"
-	"admin-server/utils/redis"
 	"encoding/json"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"go-admin-starter/utils/config"
+	"go-admin-starter/utils/redis"
 	"time"
 )
 

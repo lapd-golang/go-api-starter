@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"admin-server/controllers/api"
-	"admin-server/controllers/api/v1"
-	"admin-server/middleware/jwt"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/controllers/api"
+	"go-admin-starter/controllers/api/v1"
+	"go-admin-starter/middleware/jwt"
 )
 
 func initApiRouter(r *gin.Engine) *gin.Engine {

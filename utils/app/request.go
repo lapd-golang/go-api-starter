@@ -1,8 +1,8 @@
 package app
 
 import (
-	"admin-server/utils"
 	"github.com/astaxie/beego/validation"
+	"go-admin-starter/utils"
 )
 
 func MarkErrors(errors []*validation.Error) {

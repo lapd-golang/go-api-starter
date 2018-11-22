@@ -1,14 +1,14 @@
 package api
 
 import (
-	"admin-server/models"
-	"admin-server/utils"
-	"admin-server/utils/app"
-	"admin-server/utils/e"
-	"admin-server/utils/redis"
 	"encoding/json"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/models"
+	"go-admin-starter/utils"
+	"go-admin-starter/utils/app"
+	"go-admin-starter/utils/e"
+	"go-admin-starter/utils/redis"
 	"time"
 )
 

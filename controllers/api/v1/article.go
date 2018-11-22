@@ -1,15 +1,15 @@
 package v1
 
 import (
-	"admin-server/models"
-	"admin-server/utils"
-	"admin-server/utils/app"
-	"admin-server/utils/config"
-	"admin-server/utils/e"
-	"admin-server/utils/upload"
 	"github.com/Unknwon/com"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/models"
+	"go-admin-starter/utils"
+	"go-admin-starter/utils/app"
+	"go-admin-starter/utils/config"
+	"go-admin-starter/utils/e"
+	"go-admin-starter/utils/upload"
 )
 
 // @Summary 获取单个文章

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"admin-server/database"
-	"admin-server/routers"
-	"admin-server/utils"
-	"admin-server/utils/config"
 	"fmt"
 	"github.com/fvbock/endless"
+	"go-admin-starter/database"
+	"go-admin-starter/routers"
+	"go-admin-starter/utils"
+	"go-admin-starter/utils/config"
 	"log"
 	"net/http"
 	"runtime"

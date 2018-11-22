@@ -1,11 +1,11 @@
 package jwt
 
 import (
-	"admin-server/utils"
-	"admin-server/utils/app"
-	"admin-server/utils/e"
-	"admin-server/utils/redis"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/utils"
+	"go-admin-starter/utils/app"
+	"go-admin-starter/utils/e"
+	"go-admin-starter/utils/redis"
 	"strings"
 	"time"
 )

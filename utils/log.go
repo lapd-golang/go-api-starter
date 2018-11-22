@@ -1,11 +1,11 @@
 package utils
 
 import (
-	"admin-server/utils/config"
 	"github.com/lestrrat/go-file-rotatelogs"
 	"github.com/pkg/errors"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"go-admin-starter/utils/config"
 	"path"
 	"time"
 )

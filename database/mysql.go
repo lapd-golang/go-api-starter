@@ -1,10 +1,10 @@
 package database
 
 import (
-	"admin-server/utils/config"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"go-admin-starter/utils/config"
 	"log"
 	"time"
 )

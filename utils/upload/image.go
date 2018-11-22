@@ -1,13 +1,13 @@
 package upload
 
 import (
-	"admin-server/utils"
-	"admin-server/utils/config"
-	"admin-server/utils/file"
 	"bytes"
 	"errors"
 	"fmt"
 	"github.com/Unknwon/com"
+	"go-admin-starter/utils"
+	"go-admin-starter/utils/config"
+	"go-admin-starter/utils/file"
 	"io"
 	"io/ioutil"
 	"log"

@@ -1,4 +1,4 @@
-module admin-server
+module go-admin-starter
 
 require (
 	cloud.google.com/go v0.32.0 // indirect

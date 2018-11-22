@@ -1,8 +1,8 @@
 package main
 
 import (
-	"admin-server/models"
 	"github.com/robfig/cron"
+	"go-admin-starter/models"
 	"log"
 	"time"
 )
