@@ -19,7 +19,6 @@ type tomlConfig struct {
 type app struct {
 	JwtSecret       string
 	PageSize        int
-	RuntimeRootPath string
 
 	ImagePrefixUrl  string
 	ImageSavePath   string
