@@ -19,8 +19,10 @@ func GetExt(fileName string) string {
 
 func CheckExist(src string) bool {
 	_, err := os.Stat(src)
-
-	return os.IsNotExist(err)
+	if err != nil && os.IsNotExist(err) {
+		return false
+	}
+	return true
 }
 
 func CheckPermission(src string) bool {

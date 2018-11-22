@@ -6,6 +6,7 @@ import (
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"go-admin-starter/utils/config"
+	"go-admin-starter/utils/file"
 	"path"
 	"time"
 )
@@ -15,7 +16,11 @@ var Log *logrus.Logger
 func LogSetup() {
 	Log = logrus.New()
 	Log.SetLevel(logrus.InfoLevel)
-	ConfigLocalFilesystemLogger("logs", config.Conf.App.LogSaveName, time.Hour*24*30, time.Second*60*60*24-1)
+
+	logPath := config.Conf.App.LogSavePath
+	file.IsNotExistMkDir(logPath)
+
+	ConfigLocalFilesystemLogger(logPath, config.Conf.App.LogSaveName, time.Hour*24*30, time.Second*60*60*24-1)
 }
 
 func ConfigLocalFilesystemLogger(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
