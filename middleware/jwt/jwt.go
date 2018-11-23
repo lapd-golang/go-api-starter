@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin-starter/utils/app"
 	"go-admin-starter/utils/e"
+	"go-admin-starter/utils/redis"
 	"strings"
 	"time"
 )
@@ -113,11 +114,12 @@ func JWTAuth() gin.HandlerFunc {
 		}
 		token = parts[1]
 
-		//isExist := redis.Master().Exists(token)
-		//if isExist.Val() != true {
-		//	app.Response(c, e.ERROR_AUTH, "无效Token", nil)
-		//	return
-		//}
+		//检查token是否存在于redis中
+		isExist := redis.Master().Exists(token)
+		if isExist.Val() != true {
+			app.Response(c, e.ERROR_AUTH, "无效Token", nil)
+			return
+		}
 
 		j := NewJWT()
 		claims, err := j.ParseToken(token)
