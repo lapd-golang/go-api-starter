@@ -3,7 +3,9 @@ package api
 import (
 	"encoding/json"
 	"github.com/astaxie/beego/validation"
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"go-admin-starter/middleware/jwt"
 	"go-admin-starter/models"
 	"go-admin-starter/utils"
 	"go-admin-starter/utils/app"
@@ -12,9 +14,19 @@ import (
 	"time"
 )
 
+var lifeTime = 3 * time.Hour
+
 type auth struct {
 	Username string `valid:"Required; MaxSize(50)"`
 	Password string `valid:"Required; MaxSize(50)"`
+}
+
+//返回token结构
+type TokenData struct {
+	TokenType    string `json:"token_type"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresAt    int64  `json:"expires_at"`
 }
 
 // @Summary 授权
@@ -49,11 +61,34 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	j := utils.NewJWT()
-	tokenData, err := j.GenerateToken(user.ID, user.Username, c.Request.UserAgent())
+	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
+
+	j := jwt.NewJWT()
+	claims := jwt.Customclaims{
+		user.ID,
+		user.Username,
+		c.Request.UserAgent(),
+		jwtgo.StandardClaims{
+			ExpiresAt: expiresAt,
+			Issuer:    "kerlin",//签名发行者
+		},
+	}
+	accessToken, err := j.CreateToken(claims)
 	if err != nil {
 		app.Response(c, e.ERROR_AUTH_TOKEN, "Token生成失败", nil)
 		return
+	}
+
+	tokenData := TokenData{
+		"Bearer",
+		accessToken,
+		utils.EncodeMD5(accessToken),
+		expiresAt,
+	}
+	//记录token到redis
+	data, err := json.Marshal(tokenData)
+	if err := redis.Master().Set(accessToken, data, lifeTime).Err(); err != nil {
+		utils.Log.Warn("recrod auth token to redis error: ", err)
 	}
 
 	app.Response(c, e.SUCCESS, "ok", tokenData)
@@ -80,18 +115,11 @@ func RefreshToken(c *gin.Context) {
 		return
 	}
 
-	//验证accessToken是否存在
-	dbToken := redis.Master().Get(accessToken)
-	if dbToken.Val() == "" {
-		app.Response(c, e.ERROR_AUTH, "无效Token", nil)
-		return
-	}
-
 	//解析accessToken，验证过期
-	j := utils.NewJWT()
+	j := jwt.NewJWT()
 	claims, err := j.ParseToken(accessToken)
 	if err != nil {
-		app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_FAIL, "Token鉴权失败", nil)
+		app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_FAIL, "Token鉴权失败", err)
 		return
 	} else if time.Now().Unix() > claims.ExpiresAt {
 		app.Response(c, e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT, "Token已超时", nil)
@@ -99,21 +127,32 @@ func RefreshToken(c *gin.Context) {
 	}
 
 	//判断是否相同UserAgent；验证refreshToken
-	var t utils.TokenData
-	json.Unmarshal([]byte(dbToken.Val()), &t)
-	if claims.UserAgent != c.Request.UserAgent() || refreshToken != t.RefreshToken {
+	if claims.UserAgent != c.Request.UserAgent() || refreshToken != utils.EncodeMD5(accessToken) {
 		app.Response(c, e.ERROR_AUTH, "无效Token", nil)
 		return
 	}
 
 	//生成新token
-	tokenData, err := j.GenerateToken(claims.ID, claims.Username, c.Request.UserAgent())
+	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
+	newAccessToken, err := j.RefreshToken(accessToken, expiresAt)
 	if err != nil {
 		app.Response(c, e.ERROR_AUTH_TOKEN, "Token生成失败", nil)
 		return
 	}
 
 	redis.Master().Del(accessToken)//移除旧token
+
+	tokenData := TokenData{
+		"Bearer",
+		newAccessToken,
+		utils.EncodeMD5(newAccessToken),
+		expiresAt,
+	}
+	//记录token到redis
+	data, err := json.Marshal(tokenData)
+	if err := redis.Master().Set(accessToken, data, lifeTime).Err(); err != nil {
+		utils.Log.Warn("recrod auth token to redis error: ", err)
+	}
 
 	app.Response(c, e.SUCCESS, "ok", tokenData)
 }
