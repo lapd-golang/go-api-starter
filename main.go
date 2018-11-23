@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/fvbock/endless"
 	"go-admin-starter/database"
+	"go-admin-starter/middleware/jwt"
 	"go-admin-starter/routers"
 	"go-admin-starter/utils"
 	"go-admin-starter/utils/config"
@@ -18,6 +19,7 @@ func main() {
 	database.Setup()
 	defer database.Eloquent.Close()
 	utils.LogSetup()
+	jwt.SetSignKey(config.Conf.App.JwtSecret)
 
 	routersInit := routers.InitRouter()
 	readTimeout := config.Conf.Server.ReadTimeout
