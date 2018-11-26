@@ -3,8 +3,10 @@ module go-admin-starter
 require (
 	cloud.google.com/go v0.32.0 // indirect
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/Knetic/govaluate v3.0.0+incompatible // indirect
 	github.com/Unknwon/com v0.0.0-20181010210213-41959bdd855f
 	github.com/astaxie/beego v1.10.1
+	github.com/casbin/casbin v1.7.0 // indirect
 	github.com/denisenkom/go-mssqldb v0.0.0-20181014144952-4e0d7dc8888f // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
