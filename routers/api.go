@@ -33,6 +33,9 @@ func initApiRouter(r *gin.Engine) *gin.Engine {
 		apiv1.PUT("/articles/:id", v1.EditArticle)
 		//删除指定文章
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
+
+		//添加角色权限
+		apiv1.POST("/addrole", v1.AddCasbin)
 	}
 
 	return r
