@@ -29,6 +29,7 @@ type Customclaims struct {
 	ID        int    `json:"user_id"`
 	Username  string `json:"username"`
 	UserAgent string `json:"user_agent"`
+	Role      string `json:"role"`
 	jwt.StandardClaims
 }
 

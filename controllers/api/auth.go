@@ -68,6 +68,7 @@ func GetAuth(c *gin.Context) {
 		user.ID,
 		user.Username,
 		c.Request.UserAgent(),
+		user.Role,
 		jwtgo.StandardClaims{
 			ExpiresAt: expiresAt,
 			Issuer:    "kerlin",//签名发行者

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin-starter/controllers/api"
 	"go-admin-starter/controllers/api/v1"
+	"go-admin-starter/middleware/authrole"
 	"go-admin-starter/middleware/jwt"
 )
 
@@ -13,6 +14,7 @@ func initApiRouter(r *gin.Engine) *gin.Engine {
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWTAuth())
+	apiv1.Use(authrole.AuthCheckRole())
 	{
 		//获取标签列表
 		apiv1.GET("/tags", v1.GetTags)
