@@ -157,3 +157,70 @@ func RefreshToken(c *gin.Context) {
 
 	app.Response(c, e.SUCCESS, "ok", tokenData)
 }
+
+/*------------------------------------后台管理员相关--------------------------------------------*/
+// @Summary 后台管理员授权
+// @Produce json
+// @Param username formData string true "username"
+// @Param password formData string true "password"
+// @Success 200 {string} json "{"code":200,"data":{"token_type": "", "access_token": "", "refresh_token": "", "expires_at": 0},"message":"ok"}"
+// @Router /admin/auth [post]
+func AdminGetAuth(c *gin.Context) {
+	valid := validation.Validation{}
+
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+
+	a := auth{Username: username, Password: password}
+	ok, _ := valid.Valid(&a)
+
+	if !ok {
+		app.MarkErrors(valid.Errors)
+		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
+		return
+	}
+
+	user := models.AdminUser{
+		Username: username,
+		Password: password,
+	}
+	user = user.CheckUser()
+
+	if user.ID <= 0 {
+		app.Response(c, e.ERROR_AUTH, "账号或密码错误", nil)
+		return
+	}
+
+	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
+
+	j := jwt.NewJWT()
+	claims := jwt.Customclaims{
+		user.ID,
+		user.Username,
+		c.Request.UserAgent(),
+		user.Role,
+		jwtgo.StandardClaims{
+			ExpiresAt: expiresAt,
+			Issuer:    "kerlin",//签名发行者
+		},
+	}
+	accessToken, err := j.CreateToken(claims)
+	if err != nil {
+		app.Response(c, e.ERROR_AUTH_TOKEN, "Token生成失败", nil)
+		return
+	}
+
+	tokenData := TokenData{
+		"Bearer",
+		accessToken,
+		utils.EncodeMD5(accessToken),
+		expiresAt,
+	}
+	//记录token到redis
+	data, err := json.Marshal(tokenData)
+	if err := redis.Master().Set(accessToken, data, lifeTime).Err(); err != nil {
+		utils.Log.Warn("recrod auth token to redis error: ", err)
+	}
+
+	app.Response(c, e.SUCCESS, "ok", tokenData)
+}
