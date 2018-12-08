@@ -2,7 +2,7 @@ package models
 
 import "go-admin-starter/database"
 
-type User struct {
+type AdminUser struct {
 	Base
 
 	Username string `json:"username"`
@@ -10,7 +10,7 @@ type User struct {
 	Role     string `json:"role"`
 }
 
-func (u *User) CheckUser() (user User) {
+func (u *AdminUser) CheckUser() (user AdminUser) {
 	database.Eloquent.Where(u).First(&user)
 
 	return

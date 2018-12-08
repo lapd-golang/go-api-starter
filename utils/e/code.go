@@ -14,6 +14,8 @@ const (
 	ERROR_AUTH_TOKEN               = 20003
 	ERROR_AUTH                     = 20004
 
+	ERROR_AUTH_ROLE = 40000//角色检查失败
+
 	// 保存图片失败
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL = 30001
 	// 检查图片失败
