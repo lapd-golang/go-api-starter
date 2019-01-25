@@ -11,7 +11,6 @@ func initWebRouter(r *gin.Engine) *gin.Engine {
 	r.GET("/welcome", web.Welcome)
 
 	r.Static("/static", "static")//静态资源目录，包含上传目录
-	r.Static("/docs", "docs")//docs
 
 	return r
 }
