@@ -40,10 +40,11 @@ func initApiRouter(r *gin.Engine) *gin.Engine {
 
 		//后台管理api
 		admin := apiGroup.Group("/admin")
+		admin.POST("/auth", api.AdminGetAuth)
+
 		admin.Use(jwt.JWTAuth())
 		admin.Use(authrole.AuthCheckRole())
 		{
-			admin.POST("/auth", api.AdminGetAuth)
 			admin.POST("/refreshToken", api.RefreshToken)
 
 			admin.POST("/addrole", v1.AddCasbin)//添加角色权限
