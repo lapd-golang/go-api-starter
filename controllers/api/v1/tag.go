@@ -11,14 +11,7 @@ import (
 	"go-admin-starter/utils/e"
 )
 
-// @Summary 获取多个文章标签
-// @Tags tags
-// @Produce json
-// @Param Authorization header string true "Bearer Token"
-// @Param name query string false "Name"
-// @Param state query int false "State"
-// @Success 200 {string} json "{"code":200,"data":{"lists": [], "total": 0},"message":"ok"}"
-// @Router /api/v1/tags [get]
+//获取多个文章标签
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 
@@ -40,15 +33,7 @@ func GetTags(c *gin.Context) {
 	app.Response(c, e.SUCCESS, "ok", data)
 }
 
-// @Summary 新增文章标签
-// @Tags tags
-// @Produce json
-// @Param Authorization header string true "Bearer Token"
-// @Param name formData string true "Name"
-// @Param state formData int false "State"
-// @Param created_by formData int true "CreatedBy"
-// @Success 200 {string} json "{"code":200,"data":ID,"message":"ok"}"
-// @Router /api/v1/tags [post]
+//新增文章标签
 func AddTag(c *gin.Context) {
 	name := c.PostForm("name")
 	state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
@@ -88,16 +73,7 @@ func AddTag(c *gin.Context) {
 	}
 }
 
-// @Summary 修改文章标签
-// @Tags tags
-// @Produce json
-// @Param Authorization header string true "Bearer Token"
-// @Param id path int true "ID"
-// @Param name formData string true "ID"
-// @Param state formData int false "State"
-// @Param modified_by formData string true "ModifiedBy"
-// @Success 200 {string} json "{"code":200,"data":null,"message":"ok"}"
-// @Router /api/v1/tags/{id} [put]
+//修改文章标签
 func EditTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 	name := c.PostForm("name")
@@ -146,13 +122,7 @@ func EditTag(c *gin.Context) {
 	}
 }
 
-// @Summary 删除文章标签
-// @Tags tags
-// @Produce json
-// @Param Authorization header string true "Bearer Token"
-// @Param id path int true "ID"
-// @Success 200 {string} json "{"code":200,"data":null,"message":"ok"}"
-// @Router /api/v1/tags/{id} [delete]
+//删除文章标签
 func DeleteTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 
