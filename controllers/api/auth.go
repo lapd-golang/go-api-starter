@@ -29,12 +29,7 @@ type TokenData struct {
 	ExpiresAt    int64  `json:"expires_at"`
 }
 
-// @Summary 授权
-// @Produce json
-// @Param username formData string true "username"
-// @Param password formData string true "password"
-// @Success 200 {string} json "{"code":200,"data":{"token_type": "", "access_token": "", "refresh_token": "", "expires_at": 0},"message":"ok"}"
-// @Router /auth [post]
+//授权登录
 func GetAuth(c *gin.Context) {
 	valid := validation.Validation{}
 
@@ -95,13 +90,7 @@ func GetAuth(c *gin.Context) {
 	app.Response(c, e.SUCCESS, "ok", tokenData)
 }
 
-
-// @Summary 刷新accessToken
-// @Produce json
-// @Param access_token formData string true "access_token"
-// @Param refresh_token formData string true "refresh_token"
-// @Success 200 {string} json "{"code":200,"data":{"token_type": "", "access_token": "", "refresh_token": "", "expires_at": 0},"message":"ok"}"
-// @Router /refreshToken [post]
+//刷新accessToken
 func RefreshToken(c *gin.Context) {
 	accessToken := c.PostForm("access_token")
 	refreshToken := c.PostForm("refresh_token")
@@ -159,12 +148,7 @@ func RefreshToken(c *gin.Context) {
 }
 
 /*------------------------------------后台管理员相关--------------------------------------------*/
-// @Summary 后台管理员授权
-// @Produce json
-// @Param username formData string true "username"
-// @Param password formData string true "password"
-// @Success 200 {string} json "{"code":200,"data":{"token_type": "", "access_token": "", "refresh_token": "", "expires_at": 0},"message":"ok"}"
-// @Router /admin/auth [post]
+//后台管理员授权登录
 func AdminGetAuth(c *gin.Context) {
 	valid := validation.Validation{}
 

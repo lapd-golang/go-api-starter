@@ -12,7 +12,7 @@ func initApiRouter(r *gin.Engine) *gin.Engine {
 	apiGroup := r.Group("/api")
 	{
 		apiGroup.POST("/auth", api.GetAuth)
-		apiGroup.POST("/refreshToken", api.RefreshToken)
+		apiGroup.POST("/refreshToken", api.RefreshToken)//前后台共用
 
 		apiv1 := apiGroup.Group("/v1")
 		apiv1.Use(jwt.JWTAuth())
@@ -40,12 +40,11 @@ func initApiRouter(r *gin.Engine) *gin.Engine {
 
 		//后台管理api
 		admin := apiGroup.Group("/admin")
+		admin.POST("/auth", api.AdminGetAuth)
+
 		admin.Use(jwt.JWTAuth())
 		admin.Use(authrole.AuthCheckRole())
 		{
-			admin.POST("/auth", api.AdminGetAuth)
-			admin.POST("/refreshToken", api.RefreshToken)
-
 			admin.POST("/addrole", v1.AddCasbin)//添加角色权限
 		}
 	}
