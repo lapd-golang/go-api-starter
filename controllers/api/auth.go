@@ -122,6 +122,13 @@ func RefreshToken(c *gin.Context) {
 		return
 	}
 
+	//token是否存在于redis中
+	isExist := redis.Master().Exists(accessToken)
+	if isExist.Val() != true {
+		app.Response(c, e.ERROR_AUTH, "无效Token", nil)
+		return
+	}
+
 	//生成新token
 	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
 	newAccessToken, err := j.RefreshToken(accessToken, expiresAt)
@@ -140,7 +147,7 @@ func RefreshToken(c *gin.Context) {
 	}
 	//记录token到redis
 	data, err := json.Marshal(tokenData)
-	if err := redis.Master().Set(accessToken, data, lifeTime).Err(); err != nil {
+	if err := redis.Master().Set(newAccessToken, data, lifeTime).Err(); err != nil {
 		utils.Log.Warn("recrod auth token to redis error: ", err)
 	}
 
