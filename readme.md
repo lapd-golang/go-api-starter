@@ -1,9 +1,8 @@
-# go-admin-starter
+# go-api-starter
 
 前后端分离的管理后台。
 
 ### 技术栈
-* [Ant Design Pro](http://pro.ant.design/)
 * Gin
 * [JWT](https://github.com/dgrijalva/jwt-go)
 
