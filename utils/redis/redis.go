@@ -6,11 +6,13 @@ import (
 	"gopkg.in/redis.v5"
 )
 
+var conf = config.New()
+
 func factory(name string) *redis.Client {
-	host := config.Conf.GetString("redis." + name + ".host")
-	port := config.Conf.GetString("redis." + name + ".port")
-	password := config.Conf.GetString("redis." + name + ".password")
-	poolSize := config.Conf.GetInt("redis." + name + ".maxactive")
+	host := conf.GetString("redis." + name + ".host")
+	port := conf.GetString("redis." + name + ".port")
+	password := conf.GetString("redis." + name + ".password")
+	poolSize := conf.GetInt("redis." + name + ".maxactive")
 	fmt.Printf("conf-redis: %s:%s - %s\r\n", host, port, password)
 
 	address := fmt.Sprintf("%s:%s", host, port)

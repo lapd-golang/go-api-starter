@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-var Conf *tomlConfig
+var conf *TomlConfig
 
-type tomlConfig struct {
+type TomlConfig struct {
 	App      app
 	Server   server
 	Database database
@@ -54,7 +54,7 @@ type redis struct {
 	MaxActive int
 }
 
-func Setup() {
+func init() {
 	filePath, err := filepath.Abs("conf/app.toml")
 	if err != nil {
 		panic(err)
@@ -67,26 +67,30 @@ func Setup() {
 	if err2 != nil { // Handle errors reading the config file
 		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
-	viper.Unmarshal(&Conf)
+	viper.Unmarshal(&conf)
 
-	Conf.App.ImageMaxSize = Conf.App.ImageMaxSize * 1024 * 1024
+	conf.App.ImageMaxSize = conf.App.ImageMaxSize * 1024 * 1024
 
-	Conf.Server.ReadTimeout = Conf.Server.ReadTimeout * time.Second
-	Conf.Server.WriteTimeout = Conf.Server.ReadTimeout * time.Second
+	conf.Server.ReadTimeout = conf.Server.ReadTimeout * time.Second
+	conf.Server.WriteTimeout = conf.Server.ReadTimeout * time.Second
 }
 
-func (t *tomlConfig) GetString(key string) string {
+func New() *TomlConfig {
+	return conf
+}
+
+func (t *TomlConfig) GetString(key string) string {
 	return viper.GetString(key)
 }
 
-func (t *tomlConfig) GetInt(key string) int {
+func (t *TomlConfig) GetInt(key string) int {
 	return viper.GetInt(key)
 }
 
-func (t *tomlConfig) GetBool(key string) bool {
+func (t *TomlConfig) GetBool(key string) bool {
 	return viper.GetBool(key)
 }
 
-func (t *tomlConfig) GetDuration(key string) time.Duration {
+func (t *TomlConfig) GetDuration(key string) time.Duration {
 	return viper.GetDuration(key)
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/fvbock/endless"
-	"go-admin-starter/database"
 	"go-admin-starter/middleware/jwt"
 	"go-admin-starter/routers"
 	"go-admin-starter/utils"
@@ -15,19 +14,18 @@ import (
 )
 
 func main() {
-	config.Setup()
-	database.Setup()
-	defer database.Eloquent.Close()
+	conf := config.New()
+	
 	utils.LogSetup()
-	jwt.SetSignKey(config.Conf.App.JwtSecret)
+	jwt.SetSignKey(conf.App.JwtSecret)
 
 	routersInit := routers.InitRouter()
-	readTimeout := config.Conf.Server.ReadTimeout
-	writeTimeout := config.Conf.Server.WriteTimeout
-	endPoint := fmt.Sprintf(":%d", config.Conf.Server.HttpPort)
+	readTimeout := conf.Server.ReadTimeout
+	writeTimeout := conf.Server.WriteTimeout
+	endPoint := fmt.Sprintf(":%d", conf.Server.HttpPort)
 	maxHeaderBytes := 1 << 20
 
-	log.Printf("Server start at http port: %d", config.Conf.Server.HttpPort)
+	log.Printf("Server start at http port: %d", conf.Server.HttpPort)
 
 	if runtime.GOOS == "windows" {
 		server := &http.Server{

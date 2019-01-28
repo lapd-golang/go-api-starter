@@ -10,26 +10,27 @@ import (
 )
 
 var Eloquent *gorm.DB
+var conf = config.New()
 
-func Setup() {
+func init() {
 	var err error
 
-	Eloquent, err = gorm.Open(config.Conf.Database.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		config.Conf.Database.User,
-		config.Conf.Database.Password,
-		config.Conf.Database.Host,
-		config.Conf.Database.Name))
+	Eloquent, err = gorm.Open(conf.Database.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		conf.Database.User,
+		conf.Database.Password,
+		conf.Database.Host,
+		conf.Database.Name))
 
 	if err != nil {
 		log.Println(err)
 	}
 
-	if config.Conf.Server.RunMode == "debug" {
+	if conf.Server.RunMode == "debug" {
 		Eloquent.LogMode(true)
 	}
 
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return config.Conf.Database.TablePrefix + defaultTableName
+		return conf.Database.TablePrefix + defaultTableName
 	}
 
 	Eloquent.SingularTable(true)
@@ -41,6 +42,8 @@ func Setup() {
 	Eloquent.DB().SetMaxIdleConns(10)
 	Eloquent.DB().SetMaxOpenConns(100)
 	Eloquent.DB().SetConnMaxLifetime(60 * time.Second)
+
+	defer Eloquent.Close()
 }
 
 func CloseDB() {

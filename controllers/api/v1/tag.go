@@ -26,8 +26,9 @@ func GetTags(c *gin.Context) {
 		user.State = state
 	}
 
+	conf := config.New()
 	data := make(map[string]interface{})
-	data["lists"] = user.Get(utils.GetPage(c), config.Conf.App.PageSize)
+	data["lists"] = user.Get(utils.GetPage(c), conf.App.PageSize)
 	data["total"] = user.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)

@@ -11,7 +11,8 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	gin.SetMode(config.Conf.Server.RunMode)
+	conf := config.New()
+	gin.SetMode(conf.Server.RunMode)
 
 	initWebRouter(r)
 
