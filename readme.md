@@ -6,10 +6,8 @@
 * [Ant Design Pro](http://pro.ant.design/)
 * Gin
 * [JWT](https://github.com/dgrijalva/jwt-go)
-* Swagger
 
 ### 功能列表
-* [X] API文档
 * [X] 图片上传
 * [ ] 文件下载
 * [X] 登录
