@@ -11,7 +11,7 @@ type AdminUser struct {
 }
 
 func (u *AdminUser) CheckUser() (user AdminUser) {
-	database.Eloquent.Where(u).First(&user)
+	database.GetDB().Where(u).First(&user)
 
 	return
 }

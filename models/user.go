@@ -1,7 +1,5 @@
 package models
 
-import "go-admin-starter/database"
-
 type User struct {
 	Base
 
@@ -11,7 +9,7 @@ type User struct {
 }
 
 func (u *User) CheckUser() (user User) {
-	database.Eloquent.Where(u).First(&user)
+	db.Where(u).First(&user)
 
 	return
 }

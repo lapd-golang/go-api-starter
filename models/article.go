@@ -1,7 +1,5 @@
 package models
 
-import "go-admin-starter/database"
-
 type Article struct {
 	Base
 
@@ -19,7 +17,7 @@ type Article struct {
 
 func (a *Article) ExistByID(id int) bool {
 	var article Article
-	database.Eloquent.Select("id").Where("id = ?", id).First(&article)
+	db.Select("id").Where("id = ?", id).First(&article)
 
 	if article.ID > 0 {
 		return true
@@ -29,39 +27,39 @@ func (a *Article) ExistByID(id int) bool {
 }
 
 func (a *Article) GetTotal() (count int){
-	database.Eloquent.Model(&Article{}).Where(a).Count(&count)
+	db.Model(&Article{}).Where(a).Count(&count)
 
 	return
 }
 
 func (a *Article) Get(pageNum int, pageSize int) (articles []Article) {
-	database.Eloquent.Preload("Tag").Where(a).Offset(pageNum).Limit(pageSize).Find(&articles)
+	db.Preload("Tag").Where(a).Offset(pageNum).Limit(pageSize).Find(&articles)
 
 	return
 }
 
 func (a *Article) GetById(id int) (article Article) {
-	database.Eloquent.Where("id = ?", id).First(&article)
-	database.Eloquent.Model(&article).Related(&article.Tag)
+	db.Where("id = ?", id).First(&article)
+	db.Model(&article).Related(&article.Tag)
 
 	return
 }
 
 func (a *Article) Update(id int) (updateArticle Article, err error) {
-	if err = database.Eloquent.Select([]string{"id"}).First(&updateArticle, id).Error; err != nil {
+	if err = db.Select([]string{"id"}).First(&updateArticle, id).Error; err != nil {
 		return
 	}
 
 	//参数1:是要修改的数据
 	//参数2:是修改的数据
-	if err = database.Eloquent.Model(&updateArticle).Updates(&a).Error; err != nil {
+	if err = db.Model(&updateArticle).Updates(&a).Error; err != nil {
 		return
 	}
 	return
 }
 
 func (a *Article) Insert() (id int, err error) {
-	result := database.Eloquent.Create(&a)
+	result := db.Create(&a)
 	id = a.ID
 	if result.Error != nil {
 		err = result.Error
@@ -71,11 +69,11 @@ func (a *Article) Insert() (id int, err error) {
 }
 
 func (a *Article) Delete(id int) (article Article, err error) {
-	if err = database.Eloquent.Select([]string{"id"}).First(&a, id).Error; err != nil {
+	if err = db.Select([]string{"id"}).First(&a, id).Error; err != nil {
 		return
 	}
 
-	if err = database.Eloquent.Delete(&a).Error; err != nil {
+	if err = db.Delete(&a).Error; err != nil {
 		return
 	}
 	article = *a
@@ -83,7 +81,7 @@ func (a *Article) Delete(id int) (article Article, err error) {
 }
 
 func (a *Article) CleanAll() bool {
-	database.Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
+	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Article{})
 
 	return true
 }
