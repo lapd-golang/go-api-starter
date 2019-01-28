@@ -27,6 +27,8 @@ func main() {
 	endPoint := fmt.Sprintf(":%d", config.Conf.Server.HttpPort)
 	maxHeaderBytes := 1 << 20
 
+	log.Printf("Server start at http port: %d", config.Conf.Server.HttpPort)
+
 	if runtime.GOOS == "windows" {
 		server := &http.Server{
 			Addr:           endPoint,
