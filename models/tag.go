@@ -1,10 +1,7 @@
 package models
 
-import "go-admin-starter/database"
-
 type Tag struct {
 	Base
-
 	Name       string `json:"name"`
 	CreatedBy  string `json:"created_by"`
 	ModifiedBy string `json:"modified_by"`
@@ -12,20 +9,20 @@ type Tag struct {
 }
 
 func (t *Tag) Get(pageNum int, pageSize int) (tags []Tag) {
-	database.Eloquent.Where(t).Offset(pageNum).Limit(pageSize).Find(&tags)
+	db.Where(t).Offset(pageNum).Limit(pageSize).Find(&tags)
 
 	return
 }
 
 func (t *Tag) GetTotal() (count int) {
-	database.Eloquent.Model(&Tag{}).Where(t).Count(&count)
+	db.Model(&Tag{}).Where(t).Count(&count)
 
 	return
 }
 
 func (t *Tag) ExistByName(name string) bool {
 	var tag Tag
-	database.Eloquent.Select("id").Where("name = ?", name).First(&tag)
+	db.Select("id").Where("name = ?", name).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -34,7 +31,7 @@ func (t *Tag) ExistByName(name string) bool {
 }
 
 func (t *Tag) Insert() (id int, err error) {
-	result := database.Eloquent.Create(&t)
+	result := db.Create(&t)
 	id = t.ID
 	if result.Error != nil {
 		err = result.Error
@@ -45,7 +42,7 @@ func (t *Tag) Insert() (id int, err error) {
 
 func (t *Tag) ExistByID(id int) bool {
 	var tag Tag
-	database.Eloquent.Select("id").Where("id = ?", id).First(&tag)
+	db.Select("id").Where("id = ?", id).First(&tag)
 	if tag.ID > 0 {
 		return true
 	}
@@ -54,11 +51,11 @@ func (t *Tag) ExistByID(id int) bool {
 }
 
 func (t *Tag) Delete(id int) (tag Tag, err error) {
-	if err = database.Eloquent.Select([]string{"id"}).First(&t, id).Error; err != nil {
+	if err = db.Select([]string{"id"}).First(&t, id).Error; err != nil {
 		return
 	}
 
-	if err = database.Eloquent.Delete(&t).Error; err != nil {
+	if err = db.Delete(&t).Error; err != nil {
 		return
 	}
 	tag = *t
@@ -66,20 +63,20 @@ func (t *Tag) Delete(id int) (tag Tag, err error) {
 }
 
 func (t *Tag) Update(id int) (updateTag Tag, err error) {
-	if err = database.Eloquent.Select([]string{"id"}).First(&updateTag, id).Error; err != nil {
+	if err = db.Select([]string{"id"}).First(&updateTag, id).Error; err != nil {
 		return
 	}
 
 	//参数1:是要修改的数据
 	//参数2:是修改的数据
-	if err = database.Eloquent.Model(&updateTag).Updates(&t).Error; err != nil {
+	if err = db.Model(&updateTag).Updates(&t).Error; err != nil {
 		return
 	}
 	return
 }
 
 func (t *Tag) CleanAll() bool {
-	database.Eloquent.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
+	db.Unscoped().Where("deleted_on != ? ", 0).Delete(&Tag{})
 
 	return true
 }

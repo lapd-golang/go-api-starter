@@ -26,6 +26,8 @@ Password = "123456"
 Host = "127.0.0.1:3306"
 Name = "go_blog"
 TablePrefix = ""
+MaxIdleConns = 10
+MaxOpenConns = 100
 
 [redis]
   [redis.master]
