@@ -29,9 +29,9 @@ func init() {
 		db.LogMode(true)
 	}
 
-	//gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-	//	return conf.Database.TablePrefix + defaultTableName
-	//}
+	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+		return conf.Database.TablePrefix + defaultTableName
+	}
 
 	//db.SingularTable(true)
 

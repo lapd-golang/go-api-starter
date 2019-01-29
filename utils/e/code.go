@@ -4,6 +4,7 @@ const (
 	SUCCESS        = 200
 	ERROR          = 500
 	INVALID_PARAMS = 400
+	DATA_EXIST     = 409
 
 	ERROR_EXIST_TAG         = 10001
 	ERROR_NOT_EXIST_TAG     = 10002
@@ -14,7 +15,7 @@ const (
 	ERROR_AUTH_TOKEN               = 20003
 	ERROR_AUTH                     = 20004
 
-	ERROR_AUTH_ROLE = 40000//角色检查失败
+	ERROR_AUTH_ROLE = 40000 //角色检查失败
 
 	// 保存图片失败
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL = 30001

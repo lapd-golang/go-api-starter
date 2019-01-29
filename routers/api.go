@@ -12,6 +12,7 @@ func initApiRouter(r *gin.Engine) *gin.Engine {
 	apiGroup := r.Group("/api")
 	{
 		apiGroup.POST("/auth", api.GetAuth)
+		apiGroup.POST("/register", api.Register)
 		apiGroup.POST("/refreshToken", api.RefreshToken)//前后台共用
 
 		apiv1 := apiGroup.Group("/v1")
