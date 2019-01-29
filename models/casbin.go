@@ -25,7 +25,7 @@ func (c *CasbinModel) AddCasbin(cm CasbinModel) bool {
 //持久化到数据库
 func Casbin() *casbin.Enforcer {
 	conf := config.New()
-	
+
 	a := gormadapter.NewAdapter(conf.Database.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		conf.Database.User,
 		conf.Database.Password,

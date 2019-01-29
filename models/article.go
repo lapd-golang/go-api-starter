@@ -2,17 +2,15 @@ package models
 
 type Article struct {
 	Base
-
-	TagID int `json:"tag_id" gorm:"index"`
-	Tag Tag `json:"tag"`
-
-	Title string `json:"title"`
-	Desc string `json:"desc"`
-	Content string `json:"content"`
+	TagID int `json:"tag_id"`
+	Tag   Tag `json:"tag"`
+	Title         string `json:"title"`
+	Desc          string `json:"desc"`
+	Content       string `json:"content"`
 	CoverImageUrl string `json:"cover_image_url"`
-	CreatedBy string `json:"created_by"`
-	ModifiedBy string `json:"modified_by"`
-	State int `json:"state"`
+	CreatedBy     string `json:"created_by"`
+	ModifiedBy    string `json:"modified_by"`
+	State         int    `json:"state"`
 }
 
 func (a *Article) ExistByID(id int) bool {
@@ -26,7 +24,7 @@ func (a *Article) ExistByID(id int) bool {
 	return false
 }
 
-func (a *Article) GetTotal() (count int){
+func (a *Article) GetTotal() (count int) {
 	db.Model(&Article{}).Where(a).Count(&count)
 
 	return

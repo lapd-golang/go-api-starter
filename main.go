@@ -15,7 +15,6 @@ import (
 
 func main() {
 	conf := config.New()
-	
 	utils.LogSetup()
 	jwt.SetSignKey(conf.App.JwtSecret)
 
