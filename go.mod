@@ -43,7 +43,7 @@ require (
 	github.com/spf13/viper v1.2.1
 	github.com/tebeka/strftime v0.0.0-20140926081919-3f9c7761e312 // indirect
 	github.com/ugorji/go/codec v0.0.0-20181022190402-e5e69e061d4f // indirect
-	golang.org/x/crypto v0.0.0-20181106171534-e4dc69e5b2fd // indirect
+	golang.org/x/crypto v0.0.0-20181106171534-e4dc69e5b2fd
 	golang.org/x/net v0.0.0-20181108082009-03003ca0c849 // indirect
 	golang.org/x/sync v0.0.0-20181108010431-42b317875d0f // indirect
 	google.golang.org/appengine v1.3.0 // indirect

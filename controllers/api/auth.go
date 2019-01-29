@@ -11,6 +11,7 @@ import (
 	"go-admin-starter/utils/app"
 	"go-admin-starter/utils/e"
 	"go-admin-starter/utils/redis"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -27,6 +28,48 @@ type TokenData struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	ExpiresAt    int64  `json:"expires_at"`
+}
+
+//用户注册
+func Register(c *gin.Context) {
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+	confirmPassword := c.PostForm("confirm_password")
+
+	valid := validation.Validation{}
+	valid.Required(username, "username").Message("用户名 不能为空")
+	valid.Required(password, "password").Message("密码 不能为空")
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		app.Response(c, e.INVALID_PARAMS, valid.Errors[0].Message, nil)
+		return
+	}
+	if password != confirmPassword {
+		app.Response(c, e.INVALID_PARAMS, "两次输入密码不一致", nil)
+		return
+	}
+
+	user := models.User{}
+	if user.CheckExistByUsername(username) {
+		app.Response(c, e.DATA_EXIST, "用户名 已注册", nil)
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		utils.Log.Errorf("Generate from password error:", err)
+	}
+	encodePW := string(hash) //保存在数据库的密码，虽然每次生成都不同，只需保存一份即可
+
+	user.Username = username
+	user.Password = encodePW
+	id, err := user.Insert()
+	if err != nil {
+		app.Response(c, e.ERROR, err.Error(), nil)
+		return
+	}
+	app.Response(c, e.SUCCESS, "ok", id)
+	return
 }
 
 //授权登录
@@ -56,7 +99,7 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
+	expiresAt := time.Now().Add(lifeTime).Unix() //签名过期时间
 
 	j := jwt.NewJWT()
 	claims := jwt.Customclaims{
@@ -66,7 +109,7 @@ func GetAuth(c *gin.Context) {
 		user.Role,
 		jwtgo.StandardClaims{
 			ExpiresAt: expiresAt,
-			Issuer:    "kerlin",//签名发行者
+			Issuer:    "kerlin", //签名发行者
 		},
 	}
 	accessToken, err := j.CreateToken(claims)
@@ -130,14 +173,14 @@ func RefreshToken(c *gin.Context) {
 	}
 
 	//生成新token
-	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
+	expiresAt := time.Now().Add(lifeTime).Unix() //签名过期时间
 	newAccessToken, err := j.RefreshToken(accessToken, expiresAt)
 	if err != nil {
 		app.Response(c, e.ERROR_AUTH_TOKEN, "Token生成失败", nil)
 		return
 	}
 
-	redis.Master().Del(accessToken)//移除旧token
+	redis.Master().Del(accessToken) //移除旧token
 
 	tokenData := TokenData{
 		"Bearer",
@@ -182,7 +225,7 @@ func AdminGetAuth(c *gin.Context) {
 		return
 	}
 
-	expiresAt := time.Now().Add(lifeTime).Unix()//签名过期时间
+	expiresAt := time.Now().Add(lifeTime).Unix() //签名过期时间
 
 	j := jwt.NewJWT()
 	claims := jwt.Customclaims{
@@ -192,7 +235,7 @@ func AdminGetAuth(c *gin.Context) {
 		user.Role,
 		jwtgo.StandardClaims{
 			ExpiresAt: expiresAt,
-			Issuer:    "kerlin",//签名发行者
+			Issuer:    "kerlin", //签名发行者
 		},
 	}
 	accessToken, err := j.CreateToken(claims)
