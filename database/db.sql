@@ -11,7 +11,7 @@
  Target Server Version : 50722
  File Encoding         : 65001
 
- Date: 29/01/2019 16:09:27
+ Date: 29/01/2019 16:11:54
 */
 
 SET NAMES utf8mb4;
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `admin_users`;
 CREATE TABLE `admin_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT '' COMMENT '账号',
-  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `password` varchar(255) DEFAULT '' COMMENT '密码',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -89,7 +89,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL DEFAULT '' COMMENT '账号',
-  `password` varchar(10) NOT NULL DEFAULT '' COMMENT '密码',
+  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
