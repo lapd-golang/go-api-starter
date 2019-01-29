@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for admin_user
 -- ----------------------------
-DROP TABLE IF EXISTS `admin_user`;
+DROP TABLE IF EXISTS `admin_users`;
 CREATE TABLE `admin_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT '' COMMENT '账号',
@@ -35,7 +35,7 @@ CREATE TABLE `admin_user` (
 -- ----------------------------
 -- Table structure for article
 -- ----------------------------
-DROP TABLE IF EXISTS `article`;
+DROP TABLE IF EXISTS `articles`;
 CREATE TABLE `article` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tag_id` int(10) unsigned DEFAULT '0' COMMENT '标签ID',
@@ -55,7 +55,7 @@ CREATE TABLE `article` (
 -- ----------------------------
 -- Table structure for casbin_rule
 -- ----------------------------
-DROP TABLE IF EXISTS `casbin_rule`;
+DROP TABLE IF EXISTS `casbin_rules`;
 CREATE TABLE `casbin_rule` (
   `p_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `v0` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE `casbin_rule` (
 -- ----------------------------
 -- Table structure for tag
 -- ----------------------------
-DROP TABLE IF EXISTS `tag`;
+DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tag` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT '' COMMENT '标签名称',
@@ -85,7 +85,7 @@ CREATE TABLE `tag` (
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT '' COMMENT '账号',
