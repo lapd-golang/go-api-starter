@@ -39,8 +39,8 @@ func init() {
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
 
-	db.DB().SetMaxIdleConns(10)
-	db.DB().SetMaxOpenConns(100)
+	db.DB().SetMaxIdleConns(conf.Database.MaxIdleConns)
+	db.DB().SetMaxOpenConns(conf.Database.MaxOpenConns)
 	db.DB().SetConnMaxLifetime(60 * time.Second)
 
 	defer db.Close()

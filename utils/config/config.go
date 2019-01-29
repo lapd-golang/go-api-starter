@@ -17,8 +17,8 @@ type TomlConfig struct {
 }
 
 type app struct {
-	JwtSecret       string
-	PageSize        int
+	JwtSecret string
+	PageSize  int
 
 	ImagePrefixUrl  string
 	ImageSavePath   string
@@ -39,12 +39,14 @@ type server struct {
 }
 
 type database struct {
-	Type        string
-	User        string
-	Password    string
-	Host        string
-	Name        string
-	TablePrefix string
+	Type         string
+	User         string
+	Password     string
+	Host         string
+	Name         string
+	TablePrefix  string
+	MaxIdleConns int
+	MaxOpenConns int
 }
 
 type redis struct {
