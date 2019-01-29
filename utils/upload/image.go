@@ -18,8 +18,10 @@ import (
 	"time"
 )
 
+var conf = config.New()
+
 func GetImageFullUrl(path string) string {
-	return config.Conf.App.ImagePrefixUrl + "/" + path
+	return conf.App.ImagePrefixUrl + "/" + path
 }
 
 func GetImageName(name string) string {
@@ -40,13 +42,13 @@ func GetImageName(name string) string {
 }
 
 func GetImagePath() string {
-	return config.Conf.App.ImageSavePath
+	return conf.App.ImageSavePath
 }
 
 func CheckImageType(fileBytes []byte) bool {
 	fileType := http.DetectContentType(fileBytes)
 
-	for _, t := range config.Conf.App.ImageAllowTypes {
+	for _, t := range conf.App.ImageAllowTypes {
 		if t == fileType {
 			return true
 		}
@@ -63,7 +65,7 @@ func CheckImageSize(f multipart.File) bool {
 		return false
 	}
 
-	return size <= config.Conf.App.ImageMaxSize
+	return size <= conf.App.ImageMaxSize
 }
 
 func CheckImage(src string) error {

@@ -9,42 +9,47 @@ import (
 	"time"
 )
 
-var Eloquent *gorm.DB
+var db *gorm.DB
 
-func Setup() {
+func init() {
 	var err error
+	conf := config.New()
 
-	Eloquent, err = gorm.Open(config.Conf.Database.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		config.Conf.Database.User,
-		config.Conf.Database.Password,
-		config.Conf.Database.Host,
-		config.Conf.Database.Name))
+	db, err = gorm.Open(conf.Database.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		conf.Database.User,
+		conf.Database.Password,
+		conf.Database.Host,
+		conf.Database.Name))
 
 	if err != nil {
 		log.Println(err)
 	}
 
-	if config.Conf.Server.RunMode == "debug" {
-		Eloquent.LogMode(true)
+	if conf.Server.RunMode == "debug" {
+		db.LogMode(true)
 	}
 
-	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return config.Conf.Database.TablePrefix + defaultTableName
-	}
+	//gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+	//	return conf.Database.TablePrefix + defaultTableName
+	//}
 
-	Eloquent.SingularTable(true)
+	//db.SingularTable(true)
 
-	Eloquent.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
-	Eloquent.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
-	Eloquent.Callback().Delete().Replace("gorm:delete", deleteCallback)
+	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
+	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
+	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
 
-	Eloquent.DB().SetMaxIdleConns(10)
-	Eloquent.DB().SetMaxOpenConns(100)
-	Eloquent.DB().SetConnMaxLifetime(60 * time.Second)
+	db.DB().SetMaxIdleConns(conf.Database.MaxIdleConns)
+	db.DB().SetMaxOpenConns(conf.Database.MaxOpenConns)
+	db.DB().SetConnMaxLifetime(time.Hour)
+}
+
+func GetDB() *gorm.DB {
+	return db
 }
 
 func CloseDB() {
-	defer Eloquent.Close()
+	defer db.Close()
 }
 
 // updateTimeStampForCreateCallback will set `CreatedOn`, `ModifiedOn` when creating

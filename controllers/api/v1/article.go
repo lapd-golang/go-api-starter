@@ -63,8 +63,9 @@ func GetArticles(c *gin.Context) {
 		return
 	}
 
+	conf := config.New()
 	data := make(map[string]interface{})
-	data["lists"] = article.Get(utils.GetPage(c), config.Conf.App.PageSize)
+	data["lists"] = article.Get(utils.GetPage(c), conf.App.PageSize)
 	data["total"] = article.GetTotal()
 
 	app.Response(c, e.SUCCESS, "ok", data)
