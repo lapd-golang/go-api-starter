@@ -29,11 +29,11 @@ func init() {
 		db.LogMode(true)
 	}
 
-	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return conf.Database.TablePrefix + defaultTableName
-	}
+	//gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+	//	return conf.Database.TablePrefix + defaultTableName
+	//}
 
-	db.SingularTable(true)
+	//db.SingularTable(true)
 
 	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
 	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
@@ -41,9 +41,7 @@ func init() {
 
 	db.DB().SetMaxIdleConns(conf.Database.MaxIdleConns)
 	db.DB().SetMaxOpenConns(conf.Database.MaxOpenConns)
-	db.DB().SetConnMaxLifetime(60 * time.Second)
-
-	defer db.Close()
+	db.DB().SetConnMaxLifetime(time.Hour)
 }
 
 func GetDB() *gorm.DB {
