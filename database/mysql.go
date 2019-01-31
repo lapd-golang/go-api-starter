@@ -41,7 +41,7 @@ func init() {
 
 	db.DB().SetMaxIdleConns(conf.Database.MaxIdleConns)
 	db.DB().SetMaxOpenConns(conf.Database.MaxOpenConns)
-	db.DB().SetConnMaxLifetime(time.Hour)
+	db.DB().SetConnMaxLifetime(time.Minute)//必须小于mysql服务器的空闲超时时间
 }
 
 func GetDB() *gorm.DB {
