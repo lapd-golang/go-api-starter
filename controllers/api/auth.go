@@ -49,8 +49,9 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	user := models.User{}
-	if user.CheckExistByUsername(username) {
+	userModel := models.User{}
+	user := userModel.GetByUsername(username)
+	if user.ID > 0 {
 		app.Response(c, e.DATA_EXIST, "用户名 已注册", nil)
 		return
 	}
@@ -88,13 +89,10 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	user := models.User{
-		Username: username,
-		Password: password,
-	}
-	user = user.CheckUser()
-
-	if user.ID <= 0 {
+	userModel := models.User{}
+	user := userModel.GetByUsername(username)
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if user.ID <= 0 || err != nil {
 		app.Response(c, e.ERROR_AUTH, "账号或密码错误", nil)
 		return
 	}
