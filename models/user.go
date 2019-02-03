@@ -7,22 +7,9 @@ type User struct {
 	Role     string `json:"role"`
 }
 
-func (u *User) CheckUser() (user User) {
-	db.Where(u).First(&user)
-
-	return
-}
-
-func (u *User) CheckExistByUsername(username string) bool  {
-	var user User
+func (u *User) GetByUsername(username string) (user User)  {
 	db.Where("username = ?", username).First(&user)
-
-
-	if user.ID > 0 {
-		return true
-	}
-
-	return false
+	return
 }
 
 func (u *User) Insert() (id int, err error) {
