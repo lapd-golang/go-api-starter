@@ -7,8 +7,17 @@ type User struct {
 	Role     string `json:"role"`
 }
 
-func (u *User) CheckUser() (user User) {
-	db.Where(u).First(&user)
+func (u *User) GetByUsername(username string) (user User)  {
+	db.Where("username = ?", username).First(&user)
+	return
+}
 
+func (u *User) Insert() (id int, err error) {
+	result := db.Create(&u)
+	id = u.ID
+	if result.Error != nil {
+		err = result.Error
+		return
+	}
 	return
 }

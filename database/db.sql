@@ -11,32 +11,32 @@
  Target Server Version : 50722
  File Encoding         : 65001
 
- Date: 08/12/2018 14:30:51
+ Date: 29/01/2019 16:11:54
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for admin_user
+-- Table structure for admin_users
 -- ----------------------------
-DROP TABLE IF EXISTS `admin_user`;
-CREATE TABLE `admin_user` (
+DROP TABLE IF EXISTS `admin_users`;
+CREATE TABLE `admin_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) DEFAULT '' COMMENT '账号',
-  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `password` varchar(255) DEFAULT '' COMMENT '密码',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `role` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='管理员';
 
 -- ----------------------------
--- Table structure for article
+-- Table structure for articles
 -- ----------------------------
-DROP TABLE IF EXISTS `article`;
-CREATE TABLE `article` (
+DROP TABLE IF EXISTS `articles`;
+CREATE TABLE `articles` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tag_id` int(10) unsigned DEFAULT '0' COMMENT '标签ID',
   `title` varchar(100) DEFAULT '' COMMENT '文章标题',
@@ -50,13 +50,13 @@ CREATE TABLE `article` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='文章';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='文章';
 
 -- ----------------------------
--- Table structure for casbin_rule
+-- Table structure for casbin_rules
 -- ----------------------------
-DROP TABLE IF EXISTS `casbin_rule`;
-CREATE TABLE `casbin_rule` (
+DROP TABLE IF EXISTS `casbin_rules`;
+CREATE TABLE `casbin_rules` (
   `p_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `v0` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `v1` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -64,13 +64,13 @@ CREATE TABLE `casbin_rule` (
   `v3` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `v4` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `v5` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色权限';
 
 -- ----------------------------
--- Table structure for tag
+-- Table structure for tags
 -- ----------------------------
-DROP TABLE IF EXISTS `tag`;
-CREATE TABLE `tag` (
+DROP TABLE IF EXISTS `tags`;
+CREATE TABLE `tags` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT '' COMMENT '标签名称',
   `created_by` varchar(100) DEFAULT '' COMMENT '创建人',
@@ -80,20 +80,21 @@ CREATE TABLE `tag` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='文章标签';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='文章标签';
 
 -- ----------------------------
--- Table structure for user
+-- Table structure for users
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) DEFAULT '' COMMENT '账号',
-  `password` varchar(50) DEFAULT '' COMMENT '密码',
+  `username` varchar(50) NOT NULL DEFAULT '' COMMENT '账号',
+  `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='用户';
+  `role` varchar(100) DEFAULT NULL COMMENT '闲置字段',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
 SET FOREIGN_KEY_CHECKS = 1;
